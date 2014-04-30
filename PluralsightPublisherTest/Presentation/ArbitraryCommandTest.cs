@@ -56,11 +56,19 @@ namespace PluralsightPublisherTest.Presentation
         public class CanExecute
         {
             [TestMethod, Owner("ebd"), TestCategory("Proven"), TestCategory("Unit")]
-            public void Returns_True()
+            public void Returns_True_When_No_Can_Execute_Function_Specified()
             {
                 var command = new ArbitraryCommand(() => { });
 
                 Assert.IsTrue(command.CanExecute(null));
+            }
+
+            [TestMethod, Owner("ebd"), TestCategory("Proven"), TestCategory("Unit")]
+            public void Returns_False_When_CanExecute_Evaluates_To_False()
+            {
+                var command = new ArbitraryCommand(() => { }, (o) => false);
+
+                Assert.IsFalse(command.CanExecute(null));
             }
         }
     }

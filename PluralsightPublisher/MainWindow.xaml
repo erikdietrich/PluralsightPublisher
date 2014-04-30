@@ -3,18 +3,30 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="MainWindow" Height="350" Width="525">
     <Grid>
-        <Menu Height="25" VerticalAlignment="Top">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="25"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Menu Grid.Row="0" Height="25" VerticalAlignment="Top">
             <MenuItem Header="_File">
                 <MenuItem Header="New..." Click="NewProject_Click"/>
                 <Separator/>
                 <MenuItem Header="Open..." Click="OpenProject_Click"/>
                 <Separator/>
-                <MenuItem Header="Save"/>
+                <MenuItem Header="Save" Command="{Binding SaveCommand}"/>
                 <MenuItem Header="Save As"/>
                 <Separator/>
                 <MenuItem Header="Exit" Command="{Binding ExitCommand}"/>
             </MenuItem>
         </Menu>
         
+        <Grid Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+            </Grid.RowDefinitions>
+            <TextBox Grid.Row="0" Text="{Binding ProjectViewModel.WorkingDirectory}"/>
+            <TextBox Grid.Row="1" Text="{Binding ProjectViewModel.PublicationDirectory}"/>
+        </Grid>
     </Grid>
 </Window>

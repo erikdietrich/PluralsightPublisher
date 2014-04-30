@@ -10,21 +10,31 @@ namespace PluralsightPublisher.Presentation
     public class ArbitraryCommand : ICommand
     {
         private readonly Action _action;
+        private readonly Func<object, bool> _canExecute;
 
-        public ArbitraryCommand(Action action)
+        public event EventHandler CanExecuteChanged
         {
-            if(action == null)
+            add { CommandManager.RequerySuggested += value; }
+            remove { CommandManager.RequerySuggested -= value; }
+        }
+
+        public ArbitraryCommand(Action action) : this(action, null) { }
+
+        public ArbitraryCommand(Action action, Func<object, bool> canExecute = null)
+        {
+            if (action == null)
                 throw new ArgumentNullException("action");
 
             _action = action;
+
+            _canExecute = canExecute ?? (o => true);
         }
 
         public bool CanExecute(object parameter)
         {
-            return true;
+            return _canExecute(parameter);
         }
-
-        public event EventHandler CanExecuteChanged { add { } remove { } }
+        
 
         public void Execute(object parameter)
         {

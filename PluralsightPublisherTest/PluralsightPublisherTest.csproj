@@ -38,6 +38,12 @@
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
+    <Reference Include="Telerik.JustMock">
+      <HintPath>..\packages\JustMock.2014.1.1623.1\lib\Net35\Telerik.JustMock.dll</HintPath>
+    </Reference>
+    <Reference Include="Telerik.JustMock.Container">
+      <HintPath>..\packages\JustMock.2014.1.1623.1\lib\Net35\Telerik.JustMock.Container.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <Choose>
     <When Condition="('$(VisualStudioVersion)' == '10.0' or '$(VisualStudioVersion)' == '') and '$(TargetFrameworkVersion)' == 'v3.5'">
@@ -55,6 +61,7 @@
     <Compile Include="ExtendedAssert.cs" />
     <Compile Include="Presentation\ArbitraryCommandTest.cs" />
     <Compile Include="Presentation\MainWindowViewModelTest.cs" />
+    <Compile Include="Presentation\ProjectViewModelTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -62,6 +69,9 @@
       <Project>{05733b61-9d70-40fc-84a8-560e7e9101e3}</Project>
       <Name>PluralsightPublisher</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
