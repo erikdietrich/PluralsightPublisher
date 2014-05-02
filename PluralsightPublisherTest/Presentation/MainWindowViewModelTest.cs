@@ -83,6 +83,25 @@ namespace PluralsightPublisherTest.Presentation
             {
                 ExtendedAssert.Throws<ArgumentException>(() => Target.CreateNewProject(null));
             }
+
+            [TestMethod, Owner("ebd"), TestCategory("Proven"), TestCategory("Unit")]
+            public void Results_In_Valid_Project()
+            {
+                Target.CreateNewProject("asdf");
+
+                Assert.IsTrue(Target.ProjectViewModel.IsValid);
+            }
+
+            [TestMethod, Owner("ebd"), TestCategory("Proven"), TestCategory("Unit")]
+            public void Raises_Property_Changed_On_ProjectViewModel()
+            {
+                var wasCalled = false;
+                Target.PropertyChanged += (o, e) => wasCalled = true;
+
+                Target.CreateNewProject("fdas");
+
+                Assert.IsTrue(wasCalled);
+            }
         }
 
         [TestClass]
@@ -101,20 +120,20 @@ namespace PluralsightPublisherTest.Presentation
             }
 
             [TestMethod, Owner("ebd"), TestCategory("Proven"), TestCategory("Unit")]
-            public void Triggers_Project_WorkingDirectory_PropertyChanged()
-            {
-                var wasCalled = false;
-                Target.ProjectViewModel.PropertyChanged += (o, e) => wasCalled |= e.PropertyName == "WorkingDirectory";
-
-                Target.LoadProject("whatever");
-
-                Assert.IsTrue(wasCalled);
-            }
-
-            [TestMethod, Owner("ebd"), TestCategory("Proven"), TestCategory("Unit")]
             public void Throws_ArgumentException_On_Empty_Path()
             {
                 ExtendedAssert.Throws<ArgumentException>(() => Target.LoadProject(string.Empty));
+            }
+
+            [TestMethod, Owner("ebd"), TestCategory("Proven"), TestCategory("Unit")]
+            public void Raises_PropertyChanged_For_ProjectViewModel()
+            {
+                var wasCalled = false;
+                Target.PropertyChanged += (o, e) => wasCalled = true;
+
+                Target.LoadProject("fdas");
+
+                Assert.IsTrue(wasCalled);
             }
         }
 

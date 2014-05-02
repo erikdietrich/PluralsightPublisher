@@ -7,10 +7,11 @@ using System.Windows;
 using System.Windows.Input;
 using PluralsightPublisher.Types;
 using PluralsightPublisher.DataTransfer;
+using System.ComponentModel;
 
 namespace PluralsightPublisher.Presentation
 {
-    public class MainWindowViewModel
+    public class MainWindowViewModel : ViewModel 
     {
         private readonly IRepository<Project> _repository;
 
@@ -29,6 +30,7 @@ namespace PluralsightPublisher.Presentation
 
             _repository = repository;
             ProjectViewModel = new ProjectViewModel();
+
             _saveCommand = new ArbitraryCommand(SaveProject, (o) => ProjectViewModel.IsValid);
         }
 
@@ -40,6 +42,7 @@ namespace PluralsightPublisher.Presentation
             var projectToCreate = new Project() { ProjectPath = projectPath };
 
             _repository.Create(projectToCreate);
+            UpdateProjectViewModel(projectToCreate);
         }
 
         public void LoadProject(string projectPath)
@@ -48,7 +51,7 @@ namespace PluralsightPublisher.Presentation
                 throw new ArgumentException("projectPath");
 
             var project = _repository.GetById(projectPath);
-            ProjectViewModel.PopulateFromModel(project);
+            UpdateProjectViewModel(project);
         }
 
         public void SaveProject()
@@ -57,6 +60,12 @@ namespace PluralsightPublisher.Presentation
                 throw new InvalidOperationException("Cannot save without loading a project.");
 
             _repository.Update(ProjectViewModel.Project);
+        }
+
+        private void UpdateProjectViewModel(Project project)
+        {
+            ProjectViewModel.PopulateFromModel(project);
+            RaisePropertyChanged("ProjectViewModel");
         }
 
     }

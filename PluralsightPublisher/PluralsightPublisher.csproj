@@ -55,6 +55,7 @@
     </ApplicationDefinition>
     <Compile Include="DataTransfer\Project.cs" />
     <Compile Include="Presentation\ProjectViewModel.cs" />
+    <Compile Include="Presentation\ViewModel.cs" />
     <Compile Include="Repository\ProjectRepository.cs" />
     <Compile Include="Types\IRepository[T].cs" />
     <Page Include="MainWindow.xaml">
