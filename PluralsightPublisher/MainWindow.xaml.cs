@@ -28,13 +28,15 @@ namespace PluralsightPublisher
         private void OpenProject_Click(object sender, RoutedEventArgs e)
         {
             var pathOfFile = GenerateFileName(new OpenFileDialog());
-            _viewModel.LoadProject(pathOfFile);
+            if(!string.IsNullOrEmpty(pathOfFile))
+                _viewModel.LoadProject(pathOfFile);
         }
 
         private void NewProject_Click(object sender, RoutedEventArgs e)
         {
             var pathOfFileToCreate = GenerateFileName(new SaveFileDialog());
-            _viewModel.CreateNewProject(pathOfFileToCreate);
+            if (!string.IsNullOrEmpty(pathOfFileToCreate)) 
+                _viewModel.CreateNewProject(pathOfFileToCreate);
         }
 
         private static string GenerateFileName(FileDialog dialog)

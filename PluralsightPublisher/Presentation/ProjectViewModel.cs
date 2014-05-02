@@ -43,6 +43,11 @@ namespace PluralsightPublisher.Presentation
 
         public Project Project { get { return _project; } }
 
+        public ProjectViewModel(Project project)
+        {
+            _project = project;
+        }
+
         public void PopulateFromModel(Project projectModelToUse)
         {
             _project = projectModelToUse;

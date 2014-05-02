@@ -46,16 +46,6 @@ namespace PluralsightPublisherTest.Presentation
         }
 
         [TestClass]
-        public class ProjectViewModel : MainWindowViewModelTest
-        {
-            [TestMethod, Owner("ebd"), TestCategory("Proven"), TestCategory("Unit")]
-            public void Initializes_Non_Null()
-            {
-                Assert.IsNotNull(Target.ProjectViewModel);
-            }
-        }
-
-        [TestClass]
         public class Constructor : MainWindowViewModelTest
         {
             [TestMethod, Owner("ebd"), TestCategory("Proven"), TestCategory("Unit")]
@@ -156,6 +146,27 @@ namespace PluralsightPublisherTest.Presentation
             public void Throws_Exception_When_Project_Has_Not_Been_Loaded()
             {
                 ExtendedAssert.Throws<InvalidOperationException>(() => Target.SaveProject());
+            }
+
+            [TestMethod, Owner("ebd"), TestCategory("Proven"), TestCategory("Unit")]
+            public void Sets_StatusText_To_Save_Successful()
+            {
+                Target.LoadProject("asdf");
+                Target.SaveProject();
+
+                Assert.AreEqual<string>("Project saved.", Target.StatusMessage);
+            }
+
+            [TestMethod, Owner("ebd"), TestCategory("Proven"), TestCategory("Unit")]
+            public void Raises_PropertyChanged_For_StatusMessage()
+            {
+                var wasCalled = false;
+                Target.PropertyChanged += (o, e) => wasCalled |= e.PropertyName == "StatusMessage";
+
+                Target.LoadProject("fdsa");
+                Target.SaveProject();
+
+                Assert.IsTrue(wasCalled);
             }
         }
     }

@@ -9,12 +9,13 @@ namespace PluralsightPublisherTest.Presentation
     {
         private ProjectViewModel Target { get; set; }
 
-        private readonly Project Project = new Project() { PublicationDirectory = "asdf", WorkingDirectory = "fdsa" };
+        private Project Project { get; set; } 
 
         [TestInitialize]
         public void BeforeEachTest()
         {
-            Target = new ProjectViewModel();   
+            Project = new Project() { PublicationDirectory = "asdf", WorkingDirectory = "fdsa" };
+            Target = new ProjectViewModel(Project);   
         }
 
         [TestClass]
@@ -64,13 +65,11 @@ namespace PluralsightPublisherTest.Presentation
         }
 
         [TestClass]
-        public class PopulateFromModel : ProjectViewModelTest
+        public class Constructor : ProjectViewModelTest
         {
             [TestMethod, Owner("ebd"), TestCategory("Proven"), TestCategory("Unit")]
             public void Initializes_To_Working_Directory_Of_Passed_In_Project()
             {
-                Target.PopulateFromModel(Project);
-
                 Assert.AreEqual<string>(Project.WorkingDirectory, Target.WorkingDirectory);
             }
 
