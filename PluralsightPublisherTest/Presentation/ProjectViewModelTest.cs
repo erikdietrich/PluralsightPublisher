@@ -38,6 +38,17 @@ namespace PluralsightPublisherTest.Presentation
 
                 ExtendedAssert.DoesNotThrow(() => Target.WorkingDirectory = newValue);
             }
+
+            [TestMethod, Owner("ebd"), TestCategory("Proven"), TestCategory("Unit")]
+            public void Raises_PropertyChanged()
+            {
+                var wasCalled = false;
+                Target.PropertyChanged += (o, e) => wasCalled |= e.PropertyName == "WorkingDirectory";
+
+                Target.WorkingDirectory = "fda";
+
+                Assert.IsTrue(wasCalled);
+            }
         }
 
         [TestClass]
@@ -67,6 +78,17 @@ namespace PluralsightPublisherTest.Presentation
                 var viewModel = new ProjectViewModel(null);
 
                 Assert.AreEqual<string>(string.Empty, viewModel.PublicationDirectory);
+            }
+
+            [TestMethod, Owner("ebd"), TestCategory("Proven"), TestCategory("Unit")]
+            public void Raises_PropertyChanged()
+            {
+                var wasCalled = false;
+                Target.PropertyChanged += (o, e) => wasCalled |= e.PropertyName == "PublicationDirectory";
+
+                Target.PublicationDirectory = "fda";
+
+                Assert.IsTrue(wasCalled);
             }
         }
 

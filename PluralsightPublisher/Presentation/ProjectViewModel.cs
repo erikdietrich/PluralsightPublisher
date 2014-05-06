@@ -21,6 +21,8 @@ namespace PluralsightPublisher.Presentation
             {
                 if(_project != null)
                     _project.WorkingDirectory = value;
+
+                RaisePropertyChanged();
             }
         }
 
@@ -34,6 +36,8 @@ namespace PluralsightPublisher.Presentation
             {
                 if(_project != null)
                     _project.PublicationDirectory = value;
+
+                RaisePropertyChanged();
             }
         }
 
