@@ -11,5 +11,6 @@ namespace PluralsightPublisher.DataTransfer
         public string ProjectPath { get; set; }
         public string WorkingDirectory { get; set; }
         public string PublicationDirectory { get; set; }
+        public string Title { get; set; }
     }
 }

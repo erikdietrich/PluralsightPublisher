@@ -1,4 +1,5 @@
 ﻿using Microsoft.Win32;
+using PluralsightPublisher.DataAccess;
 using PluralsightPublisher.Presentation;
 using PluralsightPublisher.Repository;
 using System;
@@ -6,6 +7,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows;
+using System.Xml;
 
 namespace PluralsightPublisher
 {
@@ -17,7 +19,7 @@ namespace PluralsightPublisher
         private const string PluralsightProjectExtension = ".plpr";
         private static string FileFilter { get { return string.Format("({0})|*{0}", PluralsightProjectExtension); } }
 
-        private readonly MainWindowViewModel _viewModel = new MainWindowViewModel(new ProjectRepository());
+        private readonly MainWindowViewModel _viewModel = new MainWindowViewModel(new ProjectRepository(new BasicXmlDocument()));
 
         public MainWindow()
         {

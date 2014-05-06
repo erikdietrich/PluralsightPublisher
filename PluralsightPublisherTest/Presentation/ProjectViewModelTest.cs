@@ -14,7 +14,7 @@ namespace PluralsightPublisherTest.Presentation
         [TestInitialize]
         public void BeforeEachTest()
         {
-            Project = new Project() { PublicationDirectory = "asdf", WorkingDirectory = "fdsa" };
+            Project = new Project() { PublicationDirectory = "asdf", WorkingDirectory = "fdsa", Title = "Some Project" };
             Target = new ProjectViewModel(Project);   
         }
 
@@ -26,7 +26,6 @@ namespace PluralsightPublisherTest.Presentation
             {
                 var newValue = "Asdfasdfasdf";
 
-                Target.PopulateFromModel(Project);
                 Target.WorkingDirectory = newValue;
 
                 Assert.AreEqual<string>(newValue, Project.WorkingDirectory);
@@ -49,7 +48,6 @@ namespace PluralsightPublisherTest.Presentation
             {
                 var newValue = "fffff";
 
-                Target.PopulateFromModel(Project);
                 Target.PublicationDirectory = newValue;
 
                 Assert.AreEqual<string>(newValue, Project.PublicationDirectory);
@@ -62,6 +60,53 @@ namespace PluralsightPublisherTest.Presentation
 
                 ExtendedAssert.DoesNotThrow(() => Target.PublicationDirectory = newValue);
             }
+
+            [TestMethod, Owner("ebd"), TestCategory("Proven"), TestCategory("Unit")]
+            public void Returns_Null_When_Internal_Project_Is_Null()
+            {
+                var viewModel = new ProjectViewModel(null);
+
+                Assert.AreEqual<string>(string.Empty, viewModel.PublicationDirectory);
+            }
+        }
+
+        [TestClass]
+        public class Title : ProjectViewModelTest
+        {
+            [TestMethod, Owner("ebd"), TestCategory("Proven"), TestCategory("Unit")]
+            public void Initializes_To_Title_On_Project()
+            {
+                Assert.AreEqual<string>(Project.Title, Target.Title);
+            }
+
+            [TestMethod, Owner("ebd"), TestCategory("Proven"), TestCategory("Unit")]
+            public void Sets_Title_On_Internal_Project_To_Value()
+            {
+                const string newTitle = "fdsa";
+
+                Target.Title = newTitle;
+
+                Assert.AreEqual<string>(newTitle, Project.Title);
+            }
+
+            [TestMethod, Owner("ebd"), TestCategory("Proven"), TestCategory("Unit")]
+            public void Returns_Null_When_Internal_Project_Is_Null()
+            {
+                var viewModel = new ProjectViewModel(null);
+
+                Assert.AreEqual<string>(string.Empty, viewModel.Title);
+            }
+
+            [TestMethod, Owner("ebd"), TestCategory("Proven"), TestCategory("Unit")]
+            public void Raises_PropertyChanged()
+            {
+                var wasCalled = false;
+                Target.PropertyChanged += (o, e) => wasCalled |= e.PropertyName == "Title";
+
+                Target.Title = "fdsa";
+
+                Assert.IsTrue(wasCalled);
+            }
         }
 
         [TestClass]
@@ -71,14 +116,6 @@ namespace PluralsightPublisherTest.Presentation
             public void Initializes_To_Working_Directory_Of_Passed_In_Project()
             {
                 Assert.AreEqual<string>(Project.WorkingDirectory, Target.WorkingDirectory);
-            }
-
-            [TestMethod, Owner("ebd"), TestCategory("Proven"), TestCategory("Unit")]
-            public void Sets_PublicationDirectory_To_Model_PublicationDirectory()
-            {
-                Target.PopulateFromModel(Project);
-
-                Assert.AreEqual<string>(Project.PublicationDirectory, Target.PublicationDirectory);
             }
         }
     }

@@ -65,7 +65,7 @@ namespace PluralsightPublisherTest.Presentation
 
                 Target.CreateNewProject(filePath);
 
-                ProjectRepository.Assert(r => r.Create(Arg.Matches<Project>(p => p.ProjectPath == filePath)), Occurs.Once());
+                ProjectRepository.Assert(r => r.Save(Arg.Matches<Project>(p => p.ProjectPath == filePath)), Occurs.Once());
             }
 
             [TestMethod, Owner("ebd"), TestCategory("Proven"), TestCategory("Unit")]
@@ -139,7 +139,7 @@ namespace PluralsightPublisherTest.Presentation
                 Target.LoadProject("asdf");
                 Target.SaveProject();
 
-                ProjectRepository.Assert(pr => pr.Update(theProject), Occurs.Once());
+                ProjectRepository.Assert(pr => pr.Save(theProject), Occurs.Once());
             }
 
             [TestMethod, Owner("ebd"), TestCategory("Proven"), TestCategory("Unit")]

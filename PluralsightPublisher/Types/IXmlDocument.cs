@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using PluralsightPublisher.DataTransfer;
+using System.Xml.Linq;
 
 namespace PluralsightPublisher.Types
 {
-    public interface IRepository<T>
+    public interface IXmlDocument
     {
-        T GetById(string id);
-        void Save(T itemToCreate);
+        XDocument Load(string path);
+
+        void Save(XElement root, string path); 
     }
 }

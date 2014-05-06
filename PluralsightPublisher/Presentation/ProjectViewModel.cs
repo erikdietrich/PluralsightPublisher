@@ -1,11 +1,7 @@
 ﻿using PluralsightPublisher.DataTransfer;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PluralsightPublisher.Presentation
 {
@@ -41,19 +37,27 @@ namespace PluralsightPublisher.Presentation
             }
         }
 
+        public string Title 
+        {
+            get 
+            { 
+                return _project != null ? _project.Title : string.Empty; 
+            }
+            set 
+            { 
+                if(_project != null)
+                    _project.Title = value;
+
+                RaisePropertyChanged();
+            }
+        }
+
         public Project Project { get { return _project; } }
 
         public ProjectViewModel(Project project)
         {
             _project = project;
         }
-
-        public void PopulateFromModel(Project projectModelToUse)
-        {
-            _project = projectModelToUse;
-        }
-
-        
 
     }
 }

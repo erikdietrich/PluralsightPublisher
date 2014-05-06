@@ -65,7 +65,7 @@ namespace PluralsightPublisher.Presentation
 
             var projectToCreate = new Project() { ProjectPath = projectPath };
 
-            _repository.Create(projectToCreate);
+            _repository.Save(projectToCreate);
             ProjectViewModel = new ProjectViewModel(projectToCreate);
         }
 
@@ -83,7 +83,7 @@ namespace PluralsightPublisher.Presentation
             if(!ProjectViewModel.IsValid)
                 throw new InvalidOperationException("Cannot save without loading a project.");
 
-            _repository.Update(ProjectViewModel.Project);
+            _repository.Save(ProjectViewModel.Project);
             StatusMessage = "Project saved.";
         }
 
