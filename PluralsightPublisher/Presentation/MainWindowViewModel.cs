@@ -13,7 +13,7 @@ namespace PluralsightPublisher.Presentation
 {
     public class MainWindowViewModel : ViewModel 
     {
-        private readonly IRepository<Project> _repository;
+        private readonly IProjectRepository<Project> _repository;
 
         private readonly ArbitraryCommand _exitCommand = new ArbitraryCommand(() => Application.Current.Shutdown());
         public ICommand ExitCommand { get { return _exitCommand; } }
@@ -47,7 +47,7 @@ namespace PluralsightPublisher.Presentation
         }
 
 
-        public MainWindowViewModel(IRepository<Project> repository)
+        public MainWindowViewModel(IProjectRepository<Project> repository)
         {
             if(repository == null)
                 throw new ArgumentNullException("repository");

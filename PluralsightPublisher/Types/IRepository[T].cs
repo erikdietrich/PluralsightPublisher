@@ -7,7 +7,7 @@ using PluralsightPublisher.DataTransfer;
 
 namespace PluralsightPublisher.Types
 {
-    public interface IRepository<T>
+    public interface IProjectRepository<T>
     {
         T GetById(string id);
         void Save(T itemToCreate);

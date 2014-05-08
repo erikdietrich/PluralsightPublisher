@@ -13,14 +13,14 @@ namespace PluralsightPublisherTest.Presentation
     [TestClass]
     public class MainWindowViewModelTest
     {
-        private IRepository<Project> ProjectRepository { get; set; }
+        private IProjectRepository<Project> ProjectRepository { get; set; }
 
         private MainWindowViewModel Target { get; set; }
 
         [TestInitialize]
         public void BeforeEachTest()
         {
-            ProjectRepository = Mock.Create<IRepository<Project>>();
+            ProjectRepository = Mock.Create<IProjectRepository<Project>>();
 
             Target = new MainWindowViewModel(ProjectRepository);
         }
