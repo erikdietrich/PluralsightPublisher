@@ -8,7 +8,7 @@ using System.Xml.Linq;
 
 namespace PluralsightPublisher.Repository
 {
-    public class ProjectRepository : IProjectRepository<Project>
+    public class ProjectRepository : IProjectRepository
     {
         private readonly IXmlDocument _document;
 

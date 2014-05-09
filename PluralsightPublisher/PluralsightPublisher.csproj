@@ -55,11 +55,13 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="DataAccess\BasicXmlDocument.cs" />
+    <Compile Include="DataTransfer\Module.cs" />
     <Compile Include="DataTransfer\Project.cs" />
     <Compile Include="Presentation\ProjectViewModel.cs" />
     <Compile Include="Presentation\ViewModel.cs" />
     <Compile Include="Repository\ProjectRepository.cs" />
-    <Compile Include="Types\IRepository[T].cs" />
+    <Compile Include="Types\IModuleRepository.cs" />
+    <Compile Include="Types\IProjectRepository.cs" />
     <Compile Include="Types\IXmlDocument.cs" />
     <Compile Include="Views\ProjectProperties.xaml.cs">
       <DependentUpon>ProjectProperties.xaml</DependentUpon>
