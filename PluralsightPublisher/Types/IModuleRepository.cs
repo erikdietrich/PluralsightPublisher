@@ -9,6 +9,7 @@ namespace PluralsightPublisher.Types
 {
     public interface IModuleRepository
     {
+        void Save(Module module);
         IEnumerable<Module> GetAllForProject(string projectId);
     }
 }

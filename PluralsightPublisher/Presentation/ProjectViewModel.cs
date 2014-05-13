@@ -1,6 +1,7 @@
 ﻿using PluralsightPublisher.DataTransfer;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace PluralsightPublisher.Presentation
@@ -8,7 +9,6 @@ namespace PluralsightPublisher.Presentation
     public class ProjectViewModel : ViewModel
     {
         private readonly Project _project;
-        private readonly IEnumerable<Module> _modules;
         
         public bool IsValid { get { return _project != null; } }
 
@@ -57,18 +57,16 @@ namespace PluralsightPublisher.Presentation
             }
         }
 
-        public IEnumerable<string> ModuleNames
+        public ObservableCollection<Module> Modules
         {
-            get
-            {
-                return _modules.Select(m => m.Name);
-            }
+            get; private set;
         }
+
         public Project Project { get { return _project; } }
 
         public ProjectViewModel(Project project, IEnumerable<Module> modules = null)
         {
-            _modules = modules ?? Enumerable.Empty<Module>();
+            Modules = new ObservableCollection<Module>(modules ?? Enumerable.Empty<Module>());
             _project = project;
         }
 

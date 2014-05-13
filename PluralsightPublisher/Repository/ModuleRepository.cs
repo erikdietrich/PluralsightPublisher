@@ -29,5 +29,10 @@ namespace PluralsightPublisher.Repository
                     Name = node.Attribute("Name").Value
                 });
         }
+
+        public void Save(Module module)
+        {
+            
+        }
     }
 }

@@ -137,7 +137,7 @@ namespace PluralsightPublisherTest.Presentation
 
                 Target.LoadProject("34234li");
 
-                Assert.AreEqual<string>(moduleName, Target.ProjectViewModel.ModuleNames.First());
+                Assert.AreEqual<string>(moduleName, Target.ProjectViewModel.Modules.First().Name);
             }
         }
 

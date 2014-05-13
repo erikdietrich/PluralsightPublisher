@@ -66,5 +66,15 @@ namespace PluralsightPublisherTest.Repository
                 Assert.AreEqual<string>("Module 1", name);
             }
         }
+
+        [TestClass]
+        public class Save : ModuleRepositoryTest
+        {
+            [TestMethod, Owner("ebd"), TestCategory("Proven"), TestCategory("Unit")]
+            public void Invokes_XDoc_Save()
+            {
+                
+            }
+        }
     }
 }

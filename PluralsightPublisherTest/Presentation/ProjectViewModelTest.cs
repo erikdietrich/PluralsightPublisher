@@ -137,16 +137,16 @@ namespace PluralsightPublisherTest.Presentation
         }
 
         [TestClass]
-        public class ModuleNames : ProjectViewModelTest
+        public class ModulesProperty : ProjectViewModelTest
         {
             [TestMethod, Owner("ebd"), TestCategory("Proven"), TestCategory("Unit")]
-            public void Returns_Name_Of_Passed_In_Module()
+            public void Returns_Passed_In_Module()
             {
                 const string moduleName = "fdsa";
                 Modules = new List<Module>() { new Module() { Name = moduleName } };
                 Target = new ProjectViewModel(Project, Modules);
 
-                Assert.AreEqual<string>(moduleName, Target.ModuleNames.First());
+                Assert.AreEqual<string>(moduleName, Target.Modules.First().Name);
             }
 
             [TestMethod, Owner("ebd"), TestCategory("Proven"), TestCategory("Unit")]
@@ -154,7 +154,7 @@ namespace PluralsightPublisherTest.Presentation
             {
                 Target = new ProjectViewModel(Project);
 
-                Assert.AreEqual<int>(0, Target.ModuleNames.Count());
+                Assert.AreEqual<int>(0, Target.Modules.Count());
             }
         }
 
