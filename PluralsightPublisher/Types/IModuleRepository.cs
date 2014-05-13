@@ -9,6 +9,6 @@ namespace PluralsightPublisher.Types
 {
     public interface IModuleRepository
     {
-        IEnumerable<Module> GetAll();
+        IEnumerable<Module> GetAllForProject(string projectId);
     }
 }

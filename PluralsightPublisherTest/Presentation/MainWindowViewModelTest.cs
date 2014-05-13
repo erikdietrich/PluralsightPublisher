@@ -14,6 +14,8 @@ namespace PluralsightPublisherTest.Presentation
     public class MainWindowViewModelTest
     {
         private IProjectRepository ProjectRepository { get; set; }
+        private IModuleRepository ModuleRepository { get; set; }
+
 
         private MainWindowViewModel Target { get; set; }
 
@@ -21,8 +23,9 @@ namespace PluralsightPublisherTest.Presentation
         public void BeforeEachTest()
         {
             ProjectRepository = Mock.Create<IProjectRepository>();
+            ModuleRepository = Mock.Create<IModuleRepository>();
 
-            Target = new MainWindowViewModel(ProjectRepository);
+            Target = new MainWindowViewModel(ProjectRepository, ModuleRepository);
         }
 
         [TestClass]
@@ -51,7 +54,7 @@ namespace PluralsightPublisherTest.Presentation
             [TestMethod, Owner("ebd"), TestCategory("Proven"), TestCategory("Unit")]
             public void Throws_On_Null_Argument()
             {
-                ExtendedAssert.Throws<ArgumentNullException>(() => new MainWindowViewModel(null));
+                ExtendedAssert.Throws<ArgumentNullException>(() => new MainWindowViewModel(null, null));
             }
         }
 
@@ -124,6 +127,17 @@ namespace PluralsightPublisherTest.Presentation
                 Target.LoadProject("fdas");
 
                 Assert.IsTrue(wasCalled);
+            }
+
+            [TestMethod, Owner("ebd"), TestCategory("Proven"), TestCategory("Unit")]
+            public void Populates_ProjectViewModel_ModuleNames_With_Values_From_Repository()
+            {
+                const string moduleName = "fdsa";
+                ModuleRepository.Arrange(mr => mr.GetAllForProject(Arg.AnyString)).Returns(new List<Module>() { new Module() { Name = moduleName } });
+
+                Target.LoadProject("34234li");
+
+                Assert.AreEqual<string>(moduleName, Target.ProjectViewModel.ModuleNames.First());
             }
         }
 

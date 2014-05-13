@@ -59,6 +59,7 @@
     <Compile Include="DataTransfer\Project.cs" />
     <Compile Include="Presentation\ProjectViewModel.cs" />
     <Compile Include="Presentation\ViewModel.cs" />
+    <Compile Include="Repository\ModuleRepository.cs" />
     <Compile Include="Repository\ProjectRepository.cs" />
     <Compile Include="Types\IModuleRepository.cs" />
     <Compile Include="Types\IProjectRepository.cs" />

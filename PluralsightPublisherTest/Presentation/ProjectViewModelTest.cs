@@ -1,6 +1,8 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using PluralsightPublisher.DataTransfer;
 using PluralsightPublisher.Presentation;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace PluralsightPublisherTest.Presentation
 {
@@ -9,13 +11,16 @@ namespace PluralsightPublisherTest.Presentation
     {
         private ProjectViewModel Target { get; set; }
 
-        private Project Project { get; set; } 
+        private Project Project { get; set; }
+
+        private IEnumerable<Module> Modules { get; set; }
 
         [TestInitialize]
         public void BeforeEachTest()
         {
             Project = new Project() { PublicationDirectory = "asdf", WorkingDirectory = "fdsa", Title = "Some Project" };
-            Target = new ProjectViewModel(Project);   
+            Modules = new List<Module>();
+            Target = new ProjectViewModel(Project, Modules);   
         }
 
         [TestClass]
@@ -128,6 +133,28 @@ namespace PluralsightPublisherTest.Presentation
                 Target.Title = "fdsa";
 
                 Assert.IsTrue(wasCalled);
+            }
+        }
+
+        [TestClass]
+        public class ModuleNames : ProjectViewModelTest
+        {
+            [TestMethod, Owner("ebd"), TestCategory("Proven"), TestCategory("Unit")]
+            public void Returns_Name_Of_Passed_In_Module()
+            {
+                const string moduleName = "fdsa";
+                Modules = new List<Module>() { new Module() { Name = moduleName } };
+                Target = new ProjectViewModel(Project, Modules);
+
+                Assert.AreEqual<string>(moduleName, Target.ModuleNames.First());
+            }
+
+            [TestMethod, Owner("ebd"), TestCategory("Proven"), TestCategory("Unit")]
+            public void Returns_Empty_When_Nothing_Is_Passed_In()
+            {
+                Target = new ProjectViewModel(Project);
+
+                Assert.AreEqual<int>(0, Target.ModuleNames.Count());
             }
         }
 

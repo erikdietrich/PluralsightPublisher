@@ -13,7 +13,8 @@ namespace PluralsightPublisher.Presentation
 {
     public class MainWindowViewModel : ViewModel 
     {
-        private readonly IProjectRepository _repository;
+        private readonly IProjectRepository _projectRepository;
+        private readonly IModuleRepository _moduleRepository;
 
         private readonly ArbitraryCommand _exitCommand = new ArbitraryCommand(() => Application.Current.Shutdown());
         public ICommand ExitCommand { get { return _exitCommand; } }
@@ -46,18 +47,17 @@ namespace PluralsightPublisher.Presentation
             }
         }
 
-
-        public MainWindowViewModel(IProjectRepository repository)
+        public MainWindowViewModel(IProjectRepository projectRepository, IModuleRepository moduleRepository)
         {
-            if(repository == null)
+            if (projectRepository == null)
                 throw new ArgumentNullException("repository");
 
-            _repository = repository;
+            _moduleRepository = moduleRepository;
+            _projectRepository = projectRepository;
 
             ProjectViewModel = new ProjectViewModel(null);
             _saveCommand = new ArbitraryCommand(SaveProject, (o) => ProjectViewModel.IsValid);
         }
-
         public void CreateNewProject(string projectPath)
         {
             if (string.IsNullOrEmpty(projectPath))
@@ -65,7 +65,7 @@ namespace PluralsightPublisher.Presentation
 
             var projectToCreate = new Project() { ProjectPath = projectPath };
 
-            _repository.Save(projectToCreate);
+            _projectRepository.Save(projectToCreate);
             ProjectViewModel = new ProjectViewModel(projectToCreate);
         }
 
@@ -74,8 +74,10 @@ namespace PluralsightPublisher.Presentation
             if(string.IsNullOrEmpty(projectPath))
                 throw new ArgumentException("projectPath");
 
-            var project = _repository.GetById(projectPath);
-            ProjectViewModel = new ProjectViewModel(project);
+            var project = _projectRepository.GetById(projectPath);
+            var modules = _moduleRepository.GetAllForProject(projectPath);
+
+            ProjectViewModel = new ProjectViewModel(project, modules);
         }
 
         public void SaveProject()
@@ -83,7 +85,7 @@ namespace PluralsightPublisher.Presentation
             if(!ProjectViewModel.IsValid)
                 throw new InvalidOperationException("Cannot save without loading a project.");
 
-            _repository.Save(ProjectViewModel.Project);
+            _projectRepository.Save(ProjectViewModel.Project);
             StatusMessage = "Project saved.";
         }
 

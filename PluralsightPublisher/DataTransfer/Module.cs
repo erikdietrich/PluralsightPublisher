@@ -8,5 +8,6 @@ namespace PluralsightPublisher.DataTransfer
 {
     public class Module
     {
+        public string Name { get; set; }
     }
 }
