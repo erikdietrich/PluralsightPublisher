@@ -1,7 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using PluralsightPublisher.DataTransfer;
 using PluralsightPublisher.Presentation;
 using PluralsightPublisher.Types;
+using PluralsightPublisher.Types.DataTransfer;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -1,4 +1,4 @@
-﻿using PluralsightPublisher.DataTransfer;
+﻿using PluralsightPublisher.Types.DataTransfer;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -8,7 +8,7 @@ namespace PluralsightPublisher.Presentation
 {
     public class ProjectViewModel : ViewModel
     {
-        private readonly Project _project;
+        private readonly IProject _project;
         
         public bool IsValid { get { return _project != null; } }
 
@@ -57,16 +57,16 @@ namespace PluralsightPublisher.Presentation
             }
         }
 
-        public ObservableCollection<Module> Modules
+        public ObservableCollection<IModule> Modules
         {
             get; private set;
         }
 
-        public Project Project { get { return _project; } }
+        public IProject Project { get { return _project; } }
 
-        public ProjectViewModel(Project project, IEnumerable<Module> modules = null)
+        public ProjectViewModel(IProject project, IEnumerable<IModule> modules = null)
         {
-            Modules = new ObservableCollection<Module>(modules ?? Enumerable.Empty<Module>());
+            Modules = new ObservableCollection<IModule>(modules ?? Enumerable.Empty<IModule>());
             _project = project;
         }
 

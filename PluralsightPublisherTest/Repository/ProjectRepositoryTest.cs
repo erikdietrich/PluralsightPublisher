@@ -1,7 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using PluralsightPublisher.DataTransfer;
 using PluralsightPublisher.Repository;
 using PluralsightPublisher.Types;
+using PluralsightPublisher.Types.DataTransfer;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +14,8 @@ namespace PluralsightPublisherTest.Repository
     [TestClass]
     public class ProjectRepositoryTest
     {
+        private readonly static string ValidDocument = "<?xml version=\"1.0\" encoding=\"utf-8\"?><Project><WorkingDirectory>C:\\Users\\edietrich\\Desktop</WorkingDirectory><PublicationDirectory>C:\\Users\\edietrich</PublicationDirectory><Title>My Project</Title><Module Name=\"Module 1\"/><Module Name=\"Module 2\"/></Project>";
+
         private IXmlDocument XmlDocument { get; set; }
 
         private ProjectRepository Target { get; set; }
@@ -47,6 +49,16 @@ namespace PluralsightPublisherTest.Repository
                 Target.GetById(path);
 
                 XmlDocument.Assert(rep => rep.Load(path), Occurs.Once());
+            }
+
+            [TestMethod, Owner("ebd"), TestCategory("Proven"), TestCategory("Unit")]
+            public void Returns_Project_With_Title_Matching_File()
+            {
+                XmlDocument.Arrange(x => x.Load(Arg.AnyString)).Returns(XDocument.Parse(ValidDocument));
+
+                var project = Target.GetById("asdf");
+
+                Assert.AreEqual<string>("My Project", project.Title);
             }
         }
 

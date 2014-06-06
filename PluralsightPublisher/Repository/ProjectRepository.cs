@@ -1,8 +1,7 @@
-﻿using PluralsightPublisher.DataTransfer;
-using PluralsightPublisher.Types;
+﻿using PluralsightPublisher.Types;
+using PluralsightPublisher.Types.DataTransfer;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Xml.Linq;
 
@@ -20,7 +19,7 @@ namespace PluralsightPublisher.Repository
             _document = document;
         }
 
-        public Project GetById(string id)
+        public IProject GetById(string id)
         {
             var xml = _document.Load(id);
             return new Project()
@@ -32,7 +31,7 @@ namespace PluralsightPublisher.Repository
             };
         }
 
-        public void Save(Project itemToUpdate)
+        public void Save(IProject itemToUpdate)
         {
             if(itemToUpdate == null)
                 throw new ArgumentNullException("itemToUpdate");

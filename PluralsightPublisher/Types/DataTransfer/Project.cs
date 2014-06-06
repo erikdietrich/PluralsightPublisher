@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PluralsightPublisher.DataTransfer
+namespace PluralsightPublisher.Types.DataTransfer
 {
-    public class Project
+    public class Project : IProject
     {
         public string ProjectPath { get; set; }
         public string WorkingDirectory { get; set; }

@@ -1,15 +1,13 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using PluralsightPublisher.DataTransfer;
 using PluralsightPublisher.Types;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Telerik.JustMock;
 using Telerik.JustMock.Helpers;
 using System.Xml.Linq;
 using PluralsightPublisher.Repository;
+using PluralsightPublisher.Types.DataTransfer;
 
 namespace PluralsightPublisherTest.Repository
 {
@@ -61,9 +59,9 @@ namespace PluralsightPublisherTest.Repository
             {
                 Document.Arrange(doc => doc.Load(Arg.AnyString)).Returns(XDocument.Parse(NormalProjectText));
 
-                var name = Target.GetAllForProject("blah").First().Name;
+                var module = Target.GetAllForProject("blah").First();
 
-                Assert.AreEqual<string>("Module 1", name);
+                Assert.AreEqual<string>("Module 1", module.Name);
             }
         }
 

@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PluralsightPublisher.DataTransfer
+namespace PluralsightPublisher.Types.DataTransfer
 {
-    public class Module
+    public class Module : IModule
     {
         public string Name { get; set; }
     }

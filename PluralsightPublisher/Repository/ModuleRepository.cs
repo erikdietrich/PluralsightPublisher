@@ -1,10 +1,8 @@
-﻿using PluralsightPublisher.DataTransfer;
-using PluralsightPublisher.Types;
+﻿using PluralsightPublisher.Types;
+using PluralsightPublisher.Types.DataTransfer;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PluralsightPublisher.Repository
 {
@@ -20,7 +18,7 @@ namespace PluralsightPublisher.Repository
             _document = document;
         }
 
-        public IEnumerable<Module> GetAllForProject(string projectId)
+        public IEnumerable<IModule> GetAllForProject(string projectId)
         {
             var xml = _document.Load(projectId);
             return xml.Descendants("Module").Select(node =>
