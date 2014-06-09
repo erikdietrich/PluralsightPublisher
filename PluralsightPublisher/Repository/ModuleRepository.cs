@@ -1,5 +1,5 @@
-﻿using PluralsightPublisher.Types;
-using PluralsightPublisher.Types.DataTransfer;
+﻿using PluralsightPublisher.Domain;
+using PluralsightPublisher.Types;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,7 +28,7 @@ namespace PluralsightPublisher.Repository
                 });
         }
 
-        public void Save(Module module)
+        public void Save(IModule module)
         {
             
         }

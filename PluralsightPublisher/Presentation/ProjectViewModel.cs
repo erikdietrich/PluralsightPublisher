@@ -1,4 +1,4 @@
-﻿using PluralsightPublisher.Types.DataTransfer;
+﻿using PluralsightPublisher.Types;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

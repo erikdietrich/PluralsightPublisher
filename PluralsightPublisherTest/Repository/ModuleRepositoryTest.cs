@@ -7,7 +7,6 @@ using Telerik.JustMock;
 using Telerik.JustMock.Helpers;
 using System.Xml.Linq;
 using PluralsightPublisher.Repository;
-using PluralsightPublisher.Types.DataTransfer;
 
 namespace PluralsightPublisherTest.Repository
 {

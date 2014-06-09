@@ -1,9 +1,10 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using PluralsightPublisher.Domain;
 using PluralsightPublisher.Repository;
 using PluralsightPublisher.Types;
-using PluralsightPublisher.Types.DataTransfer;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Xml.Linq;
 using Telerik.JustMock;
@@ -18,14 +19,17 @@ namespace PluralsightPublisherTest.Repository
 
         private IXmlDocument XmlDocument { get; set; }
 
+        private IFilesystem Filesystem { get; set; }
+
         private ProjectRepository Target { get; set; }
 
         [TestInitialize]
         public void BeforeEachTest()
         {
             XmlDocument = Mock.Create<IXmlDocument>();
+            Filesystem = Mock.Create<IFilesystem>();
 
-            Target = new ProjectRepository(XmlDocument);
+            Target = new ProjectRepository(XmlDocument, Filesystem);
         }
 
         [TestClass]
@@ -34,7 +38,7 @@ namespace PluralsightPublisherTest.Repository
             [TestMethod, Owner("ebd"), TestCategory("Proven"), TestCategory("Unit")]
             public void Throws_NullArgumentException_On_Null_Argument()
             {
-                ExtendedAssert.Throws<ArgumentNullException>(() => new ProjectRepository(null));
+                ExtendedAssert.Throws<ArgumentNullException>(() => new ProjectRepository(null, null));
             }
         }
 
@@ -90,6 +94,52 @@ namespace PluralsightPublisherTest.Repository
                 Target.Save(new Project() { Title = theTitle });
 
                 XmlDocument.Assert(d => d.Save(Arg.Matches<XElement>(xe => xe.Descendants().Any(x => x.Value == theTitle)), Arg.AnyString), Occurs.Once());
+            }
+        }
+
+        [TestClass]
+        public class BuildWorkspace : ProjectRepositoryTest
+        {
+            [TestMethod, Owner("ebd"), TestCategory("Proven"), TestCategory("Unit")]
+            public void Invokes_Filesystem_WipeDirectoryAndMakeNew()
+            {
+                const string path = "fas";
+
+                Target.BuildWorkspace(new Project() { WorkingDirectory = path });
+
+                Filesystem.Assert(fs => fs.WipeAndCreateDirectory(path), Occurs.Once());
+
+            }
+
+            [TestMethod, Owner("ebd"), TestCategory("Proven"), TestCategory("Unit")]
+            public void Throws_NullArgumentException_On_Null_Argument()
+            {
+                ExtendedAssert.Throws<ArgumentNullException>(() => Target.BuildWorkspace(null));
+            }
+
+            [TestMethod, Owner("ebd"), TestCategory("Proven"), TestCategory("Unit")]
+            public void Invokes_CreateDirectory_Three_Times_For_Project_With_Three_Modules()
+            {
+                const int count = 3;
+                var project = new Project(new Module() { Name = "asdf" }.AsList(count)) { WorkingDirectory = "Fdsa" };
+
+                Target.BuildWorkspace(project);
+
+                Filesystem.Assert(fs => fs.CreateDirectory(Arg.AnyString), Occurs.Exactly(count));
+            }
+
+            [TestMethod, Owner("ebd"), TestCategory("Proven"), TestCategory("Unit")]
+            public void Invokes_CreateDirectory_With_Project_WorkingDirectory_And_Module_Name_Combined()
+            {
+                const string moduleName = "asdf";
+                const string projectPath = "fasdfasdf";
+
+                var module = new Module() { Name = moduleName };
+                var project = new Project(module.AsList()) { WorkingDirectory = projectPath };
+
+                Target.BuildWorkspace(project);
+
+                Filesystem.Assert(fs => fs.CreateDirectory(Path.Combine(projectPath, moduleName)), Occurs.Once());
             }
         }
     }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using PluralsightPublisher.Domain;
 using PluralsightPublisher.Presentation;
-using PluralsightPublisher.Types.DataTransfer;
+using PluralsightPublisher.Types;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -11,9 +12,9 @@ namespace PluralsightPublisherTest.Presentation
     {
         private ProjectViewModel Target { get; set; }
 
-        private Project Project { get; set; }
+        private IProject Project { get; set; }
 
-        private IEnumerable<Module> Modules { get; set; }
+        private IEnumerable<IModule> Modules { get; set; }
 
         [TestInitialize]
         public void BeforeEachTest()

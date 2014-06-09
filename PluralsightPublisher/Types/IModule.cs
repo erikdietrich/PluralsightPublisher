@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PluralsightPublisher.Types.DataTransfer
+namespace PluralsightPublisher.Types
 {
     public interface IModule
     {

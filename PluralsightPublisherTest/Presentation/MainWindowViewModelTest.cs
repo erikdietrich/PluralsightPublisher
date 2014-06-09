@@ -1,7 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using PluralsightPublisher.Domain;
 using PluralsightPublisher.Presentation;
 using PluralsightPublisher.Types;
-using PluralsightPublisher.Types.DataTransfer;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -46,6 +46,18 @@ namespace PluralsightPublisherTest.Presentation
             {
                 Assert.IsFalse(Target.SaveCommand.CanExecute(null));
             }
+        }
+
+        [TestClass]
+        public class CreateWorkingCommand : MainWindowViewModelTest
+        {
+            [TestMethod, Owner("ebd"), TestCategory("Proven"), TestCategory("Unit")]
+            public void Invokes_Repository_BuildWorkspace_When_Executed()
+            {
+                Target.CreateWorkingCommand.Execute(null);
+
+                ProjectRepository.Assert(pr => pr.BuildWorkspace(Arg.IsAny<IProject>()), Occurs.Once());
+            }   
         }
 
         [TestClass]

@@ -19,10 +19,13 @@ namespace PluralsightPublisher
         private const string PluralsightProjectExtension = ".plpr";
         private static string FileFilter { get { return string.Format("({0})|*{0}", PluralsightProjectExtension); } }
 
-        private readonly MainWindowViewModel _viewModel = new MainWindowViewModel(new ProjectRepository(new BasicXmlDocument()), new ModuleRepository(new BasicXmlDocument()));
+        private readonly MainWindowViewModel _viewModel;
 
         public MainWindow()
         {
+            var projectRepository = new ProjectRepository(new BasicXmlDocument(), new BasicFilesystem());
+            var moduleRepository = new ModuleRepository(new BasicXmlDocument());
+            _viewModel = new MainWindowViewModel(projectRepository, moduleRepository);
             DataContext = _viewModel;
             InitializeComponent();
         }

@@ -1,10 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace PluralsightPublisher.Types.DataTransfer
+namespace PluralsightPublisher.Types
 {
     public interface IProject
     {
@@ -12,5 +10,7 @@ namespace PluralsightPublisher.Types.DataTransfer
         string WorkingDirectory { get; set; }
         string PublicationDirectory { get; set; }
         string Title { get; set; }
+
+        IEnumerable<string> GetModuleNames();
     }
 }

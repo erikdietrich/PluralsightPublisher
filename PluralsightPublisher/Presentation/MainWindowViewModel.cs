@@ -4,7 +4,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using PluralsightPublisher.Types;
-using PluralsightPublisher.Types.DataTransfer;
+using PluralsightPublisher.Domain;
 
 namespace PluralsightPublisher.Presentation
 {
@@ -18,6 +18,9 @@ namespace PluralsightPublisher.Presentation
 
         private readonly ArbitraryCommand _saveCommand;
         public ArbitraryCommand SaveCommand { get { return _saveCommand; } }
+
+        private ArbitraryCommand _createWorkingCommand;
+        public ICommand CreateWorkingCommand { get { return _createWorkingCommand; } }
 
         private ProjectViewModel _projectViewModel;
         public ProjectViewModel ProjectViewModel
@@ -53,8 +56,11 @@ namespace PluralsightPublisher.Presentation
             _projectRepository = projectRepository;
 
             ProjectViewModel = new ProjectViewModel(null);
+
             _saveCommand = new ArbitraryCommand(SaveProject, (o) => ProjectViewModel.IsValid);
+            _createWorkingCommand = new ArbitraryCommand(() => _projectRepository.BuildWorkspace(ProjectViewModel.Project));
         }
+
         public void CreateNewProject(string projectPath)
         {
             if (string.IsNullOrEmpty(projectPath))

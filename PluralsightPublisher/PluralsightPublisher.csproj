@@ -54,11 +54,13 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="DataAccess\BasicFilesystem.cs" />
     <Compile Include="DataAccess\BasicXmlDocument.cs" />
-    <Compile Include="Types\DataTransfer\IModule.cs" />
-    <Compile Include="Types\DataTransfer\IProject.cs" />
-    <Compile Include="Types\DataTransfer\Module.cs" />
-    <Compile Include="Types\DataTransfer\Project.cs" />
+    <Compile Include="Types\IFilesystem.cs" />
+    <Compile Include="Types\IModule.cs" />
+    <Compile Include="Types\IProject.cs" />
+    <Compile Include="Domain\Module.cs" />
+    <Compile Include="Domain\Project.cs" />
     <Compile Include="Presentation\ProjectViewModel.cs" />
     <Compile Include="Presentation\ViewModel.cs" />
     <Compile Include="Repository\ModuleRepository.cs" />
