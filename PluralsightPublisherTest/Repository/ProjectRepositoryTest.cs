@@ -18,8 +18,8 @@ namespace PluralsightPublisherTest.Repository
         private readonly static string ValidDocument = "<?xml version=\"1.0\" encoding=\"utf-8\"?><Project><WorkingDirectory>C:\\Users\\edietrich\\Desktop</WorkingDirectory><PublicationDirectory>C:\\Users\\edietrich</PublicationDirectory><Title>My Project</Title><Module Name=\"Module 1\"/><Module Name=\"Module 2\"/></Project>";
 
         private IXmlDocument XmlDocument { get; set; }
-
         private IFilesystem Filesystem { get; set; }
+        private DomainRoot DomainRoot { get; set; }
 
         private ProjectRepository Target { get; set; }
 
@@ -28,17 +28,23 @@ namespace PluralsightPublisherTest.Repository
         {
             XmlDocument = Mock.Create<IXmlDocument>();
             Filesystem = Mock.Create<IFilesystem>();
+            DomainRoot = Mock.Create<DomainRoot>();
 
-            Target = new ProjectRepository(XmlDocument, Filesystem);
+            DomainRoot.Arrange(dr => dr.GetRoot()).Returns((Project)null);
+            DomainRoot.Arrange(dr => dr.SetRoot(Arg.IsAny<Project>())).DoInstead((Project p) => DomainRoot.Arrange(dr => dr.GetRoot()).Returns(p));
+
+            Target = new ProjectRepository(XmlDocument, Filesystem, DomainRoot);
         }
 
         [TestClass]
-        public class Constructor
+        public class Constructor : ProjectRepositoryTest
         {
             [TestMethod, Owner("ebd"), TestCategory("Proven"), TestCategory("Unit")]
             public void Throws_NullArgumentException_On_Null_Argument()
             {
-                ExtendedAssert.Throws<ArgumentNullException>(() => new ProjectRepository(null, null));
+                ExtendedAssert.Throws<ArgumentNullException>(() => new ProjectRepository(null, Filesystem, DomainRoot));
+                ExtendedAssert.Throws<ArgumentNullException>(() => new ProjectRepository(XmlDocument, null, DomainRoot));
+                ExtendedAssert.Throws<ArgumentNullException>(() => new ProjectRepository(XmlDocument, Filesystem, null));
             }
         }
 
@@ -63,6 +69,27 @@ namespace PluralsightPublisherTest.Repository
                 var project = Target.GetById("asdf");
 
                 Assert.AreEqual<string>("My Project", project.Title);
+            }
+
+            [TestMethod, Owner("ebd"), TestCategory("Proven"), TestCategory("Unit")]
+            public void Sets_DomainRoot_To_Point_At_Retrieved_Object()
+            {
+                XmlDocument.Arrange(x => x.Load(Arg.AnyString)).Returns(XDocument.Parse(ValidDocument));
+
+                Target.GetById("fdsa");
+
+                DomainRoot.Assert(dr => dr.SetRoot(Arg.IsAny<Project>()), Occurs.Once());
+            }
+
+            [TestMethod, Owner("ebd"), TestCategory("Proven"), TestCategory("Unit")]
+            public void Returns_Root_From_DomainRoot_When_It_Exists()
+            {
+                const string projectTitle = "blah";
+                DomainRoot.Arrange(dr => dr.GetRoot()).Returns(new Project() { Title = projectTitle });
+
+                var project = Target.GetById("whatevs");
+
+                Assert.AreEqual<string>(projectTitle, project.Title);
             }
         }
 
@@ -105,7 +132,9 @@ namespace PluralsightPublisherTest.Repository
             {
                 const string path = "fas";
 
-                Target.BuildWorkspace(new Project() { WorkingDirectory = path });
+                DomainRoot.Arrange(dr => dr.GetRoot()).Returns(new Project() { WorkingDirectory = path });
+
+                Target.BuildWorkspace(new Project());
 
                 Filesystem.Assert(fs => fs.WipeAndCreateDirectory(path), Occurs.Once());
 
@@ -121,9 +150,9 @@ namespace PluralsightPublisherTest.Repository
             public void Invokes_CreateDirectory_Three_Times_For_Project_With_Three_Modules()
             {
                 const int count = 3;
-                var project = new Project(new Module() { Name = "asdf" }.AsList(count)) { WorkingDirectory = "Fdsa" };
+                DomainRoot.Arrange(dr => dr.GetRoot()).Returns(new Project(new Module() { Name = "asdf" }.AsList(count)) { WorkingDirectory = "Fdsa" });
 
-                Target.BuildWorkspace(project);
+                Target.BuildWorkspace(new Project());
 
                 Filesystem.Assert(fs => fs.CreateDirectory(Arg.AnyString), Occurs.Exactly(count));
             }
@@ -135,9 +164,9 @@ namespace PluralsightPublisherTest.Repository
                 const string projectPath = "fasdfasdf";
 
                 var module = new Module() { Name = moduleName };
-                var project = new Project(module.AsList()) { WorkingDirectory = projectPath };
+                DomainRoot.Arrange(dr => dr.GetRoot()).Returns(new Project(module.AsList()) { WorkingDirectory = projectPath });
 
-                Target.BuildWorkspace(project);
+                Target.BuildWorkspace(new Project());
 
                 Filesystem.Assert(fs => fs.CreateDirectory(Path.Combine(projectPath, moduleName)), Occurs.Once());
             }

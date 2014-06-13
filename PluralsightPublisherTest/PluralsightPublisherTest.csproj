@@ -60,6 +60,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="Domain\DomainRootTest.cs" />
     <Compile Include="ExtendedAssert.cs" />
     <Compile Include="Presentation\ArbitraryCommandTest.cs" />
     <Compile Include="Presentation\MainWindowViewModelTest.cs" />
@@ -78,9 +79,7 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Domain\" />
-  </ItemGroup>
+  <ItemGroup />
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>

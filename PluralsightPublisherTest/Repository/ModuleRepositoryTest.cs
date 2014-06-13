@@ -7,6 +7,7 @@ using Telerik.JustMock;
 using Telerik.JustMock.Helpers;
 using System.Xml.Linq;
 using PluralsightPublisher.Repository;
+using PluralsightPublisher.Domain;
 
 namespace PluralsightPublisherTest.Repository
 {
@@ -15,7 +16,8 @@ namespace PluralsightPublisherTest.Repository
     {
         private const string NormalProjectText = "<?xml version=\"1.0\" encoding=\"utf-8\"?><Project><WorkingDirectory>asdf</WorkingDirectory><PublicationDirectory>fdsa</PublicationDirectory><Title>My Project</Title><Module Name=\"Module 1\"/></Project>";
 
-        private IXmlDocument Document { get; set; } 
+        private IXmlDocument Document { get; set; }
+        private DomainRoot DomainRoot { get; set; }
 
         private ModuleRepository Target { get; set; }
 
@@ -23,7 +25,12 @@ namespace PluralsightPublisherTest.Repository
         public void BeforeEachTest()
         {
             Document = Mock.Create<IXmlDocument>();
-            Target = new ModuleRepository(Document);
+            Document.Arrange(doc => doc.Load(Arg.AnyString)).Returns(XDocument.Parse(NormalProjectText));
+
+            DomainRoot = Mock.Create<DomainRoot>();
+            DomainRoot.Arrange(dr => dr.GetRoot()).Returns(new Project());
+
+            Target = new ModuleRepository(Document, DomainRoot);
         }
 
         [TestClass]
@@ -32,7 +39,7 @@ namespace PluralsightPublisherTest.Repository
             [TestMethod, Owner("ebd"), TestCategory("Proven"), TestCategory("Unit")]
             public void Throws_Exception_On_Null_Argument()
             {
-                ExtendedAssert.Throws<ArgumentNullException>(() => new ModuleRepository(null)); 
+                ExtendedAssert.Throws<ArgumentNullException>(() => new ModuleRepository(null, null)); 
             }
         }
 
@@ -42,25 +49,33 @@ namespace PluralsightPublisherTest.Repository
             [TestMethod, Owner("ebd"), TestCategory("Proven"), TestCategory("Unit")]
             public void Returns_Empty_Collection_When_No_Matches_Are_Found()
             {
+                Document.Arrange(doc => doc.Load(Arg.AnyString)).Returns(new XDocument());
                 Assert.AreEqual<int>(0, Target.GetAllForProject("whatevs").Count());
             }
 
             [TestMethod, Owner("ebd"), TestCategory("Proven"), TestCategory("Unit")]
             public void Returns_One_Module_When_One_Module_Exists()
             {
-                Document.Arrange(doc => doc.Load(Arg.AnyString)).Returns(XDocument.Parse(NormalProjectText));
-
                 Assert.AreEqual<int>(1, Target.GetAllForProject("blah").Count());
             }
 
             [TestMethod, Owner("ebd"), TestCategory("Proven"), TestCategory("Unit")]
             public void Returns_Module_With_Name_Corresponding_To_Node_Name_Attribute()
             {
-                Document.Arrange(doc => doc.Load(Arg.AnyString)).Returns(XDocument.Parse(NormalProjectText));
-
                 var module = Target.GetAllForProject("blah").First();
 
                 Assert.AreEqual<string>("Module 1", module.Name);
+            }
+
+            [TestMethod, Owner("ebd"), TestCategory("Proven"), TestCategory("Unit")]
+            public void Adds_New_Module_To_In_Memory_Project()
+            {
+                var project = new Project();
+                DomainRoot.Arrange(dr => dr.GetRoot()).Returns(project);
+
+                var module = Target.GetAllForProject("asdf").First();
+
+                Assert.AreEqual<int>(1, project.GetModuleNames().Count());
             }
         }
 

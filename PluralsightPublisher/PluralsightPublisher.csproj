@@ -56,6 +56,7 @@
     </ApplicationDefinition>
     <Compile Include="DataAccess\BasicFilesystem.cs" />
     <Compile Include="DataAccess\BasicXmlDocument.cs" />
+    <Compile Include="Domain\DomainRoot.cs" />
     <Compile Include="Types\IFilesystem.cs" />
     <Compile Include="Types\IModule.cs" />
     <Compile Include="Types\IProject.cs" />

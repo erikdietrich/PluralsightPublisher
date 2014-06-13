@@ -1,5 +1,6 @@
 ﻿using Microsoft.Win32;
 using PluralsightPublisher.DataAccess;
+using PluralsightPublisher.Domain;
 using PluralsightPublisher.Presentation;
 using PluralsightPublisher.Repository;
 using System;
@@ -23,8 +24,9 @@ namespace PluralsightPublisher
 
         public MainWindow()
         {
-            var projectRepository = new ProjectRepository(new BasicXmlDocument(), new BasicFilesystem());
-            var moduleRepository = new ModuleRepository(new BasicXmlDocument());
+            var domainRoot = new DomainRoot();
+            var projectRepository = new ProjectRepository(new BasicXmlDocument(), new BasicFilesystem(), domainRoot);
+            var moduleRepository = new ModuleRepository(new BasicXmlDocument(), domainRoot);
             _viewModel = new MainWindowViewModel(projectRepository, moduleRepository);
             DataContext = _viewModel;
             InitializeComponent();

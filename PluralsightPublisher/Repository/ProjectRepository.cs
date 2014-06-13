@@ -12,31 +12,30 @@ namespace PluralsightPublisher.Repository
     {
         private readonly IFilesystem _filesystem;
         private readonly IXmlDocument _document;
+        private readonly DomainRoot _domainRoot;
 
-        public ProjectRepository(IXmlDocument document, IFilesystem filesystem)
+        public ProjectRepository(IXmlDocument document, IFilesystem filesystem, DomainRoot domainRoot)
         {
-            if (document == null)
-                throw new ArgumentNullException("document");
+            VerifyPreconditionsOrThrow(document, filesystem, domainRoot);
 
             _document = document;
             _filesystem = filesystem;
+            _domainRoot = domainRoot;
         }
 
         public IProject GetById(string id)
         {
-            var xml = _document.Load(id);
-            return new Project()
-            {
-                WorkingDirectory = GetDescendantValueOrNull(xml, "WorkingDirectory"),
-                PublicationDirectory = GetDescendantValueOrNull(xml, "PublicationDirectory"),
-                Title = GetDescendantValueOrNull(xml, "Title"),
-                ProjectPath = id
-            };
+            var inMemoryProject = _domainRoot.GetRoot();
+
+            if (inMemoryProject == null)
+                LoadProjectFromDiskById(id);
+
+            return _domainRoot.GetRoot();
         }
 
         public void Save(IProject itemToUpdate)
         {
-            if(itemToUpdate == null)
+            if (itemToUpdate == null)
                 throw new ArgumentNullException("itemToUpdate");
 
             var root = new XElement("Project");
@@ -51,9 +50,34 @@ namespace PluralsightPublisher.Repository
             if (projectToBuildOut == null)
                 throw new ArgumentNullException("projectToBuildOut");
 
-            _filesystem.WipeAndCreateDirectory(projectToBuildOut.WorkingDirectory);
+            var project = _domainRoot.GetRoot();
 
-            CreateModuleDirectories(projectToBuildOut);
+            _filesystem.WipeAndCreateDirectory(project.WorkingDirectory);
+
+            CreateModuleDirectories(_domainRoot.GetRoot());
+        }
+
+        private static void VerifyPreconditionsOrThrow(IXmlDocument document, IFilesystem filesystem, DomainRoot domainRoot)
+        {
+            if (document == null)
+                throw new ArgumentNullException("document");
+            if (filesystem == null)
+                throw new ArgumentNullException("filesystem");
+            if (domainRoot == null)
+                throw new ArgumentNullException("domainRoot");
+        }
+
+        private void LoadProjectFromDiskById(string id)
+        {
+            var xml = _document.Load(id);
+            var project = new Project()
+            {
+                WorkingDirectory = GetDescendantValueOrNull(xml, "WorkingDirectory"),
+                PublicationDirectory = GetDescendantValueOrNull(xml, "PublicationDirectory"),
+                Title = GetDescendantValueOrNull(xml, "Title"),
+                ProjectPath = id
+            };
+            _domainRoot.SetRoot(project);
         }
 
         private void CreateModuleDirectories(IProject projectToBuildOut)
