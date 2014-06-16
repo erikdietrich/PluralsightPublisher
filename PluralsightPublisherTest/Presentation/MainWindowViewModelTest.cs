@@ -57,7 +57,14 @@ namespace PluralsightPublisherTest.Presentation
                 Target.CreateWorkingCommand.Execute(null);
 
                 ProjectRepository.Assert(pr => pr.BuildWorkspace(Arg.IsAny<IProject>()), Occurs.Once());
-            }   
+            }
+
+            [TestMethod, Owner("ebd"), TestCategory("Proven"), TestCategory("Unit")]
+            public void Cannot_Execute_When_Project_Has_Not_Loaded()
+            {
+                Assert.IsFalse(Target.CreateWorkingCommand.CanExecute(null));
+            }
+
         }
 
         [TestClass]

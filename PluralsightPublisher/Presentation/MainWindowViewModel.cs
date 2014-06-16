@@ -19,7 +19,7 @@ namespace PluralsightPublisher.Presentation
         private readonly ArbitraryCommand _saveCommand;
         public ArbitraryCommand SaveCommand { get { return _saveCommand; } }
 
-        private ArbitraryCommand _createWorkingCommand;
+        private readonly ArbitraryCommand _createWorkingCommand;
         public ICommand CreateWorkingCommand { get { return _createWorkingCommand; } }
 
         private ProjectViewModel _projectViewModel;
@@ -58,7 +58,7 @@ namespace PluralsightPublisher.Presentation
             ProjectViewModel = new ProjectViewModel(null);
 
             _saveCommand = new ArbitraryCommand(SaveProject, (o) => ProjectViewModel.IsValid);
-            _createWorkingCommand = new ArbitraryCommand(() => _projectRepository.BuildWorkspace(ProjectViewModel.Project));
+            _createWorkingCommand = new ArbitraryCommand(() => _projectRepository.BuildWorkspace(ProjectViewModel.Project), (o) => ProjectViewModel.IsValid);
         }
 
         public void CreateNewProject(string projectPath)
