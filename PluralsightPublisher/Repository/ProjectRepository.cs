@@ -1,5 +1,6 @@
 ﻿using PluralsightPublisher.Domain;
 using PluralsightPublisher.Types;
+using Spire.Doc;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -86,6 +87,12 @@ namespace PluralsightPublisher.Repository
             {
                 var moduleRootDirectoryPath = Path.Combine(projectToBuildOut.WorkingDirectory, moduleName);
                 _filesystem.CreateDirectory(moduleRootDirectoryPath);
+                _filesystem.CreateDirectory(Path.Combine(moduleRootDirectoryPath, "Recordings"));
+                var document = new Document();
+                var paragraph = document.AddSection().AddParagraph();
+                paragraph.AppendText("This is a Pluralsight module script");
+                //TODO: Abstract this out to data access or some kind of service
+                //document.SaveToFile(Path.Combine(moduleRootDirectoryPath, "Script.docx"));
             }
         }
 

@@ -147,14 +147,14 @@ namespace PluralsightPublisherTest.Repository
             }
 
             [TestMethod, Owner("ebd"), TestCategory("Proven"), TestCategory("Unit")]
-            public void Invokes_CreateDirectory_Three_Times_For_Project_With_Three_Modules()
+            public void Invokes_CreateDirectory_Six_Times_For_Project_With_Three_Modules()
             {
                 const int count = 3;
                 DomainRoot.Arrange(dr => dr.GetRoot()).Returns(new Project(new Module() { Name = "asdf" }.AsList(count)) { WorkingDirectory = "Fdsa" });
 
                 Target.BuildWorkspace(new Project());
 
-                Filesystem.Assert(fs => fs.CreateDirectory(Arg.AnyString), Occurs.Exactly(count));
+                Filesystem.Assert(fs => fs.CreateDirectory(Arg.AnyString), Occurs.Exactly(2 * count));
             }
 
             [TestMethod, Owner("ebd"), TestCategory("Proven"), TestCategory("Unit")]
@@ -169,6 +169,20 @@ namespace PluralsightPublisherTest.Repository
                 Target.BuildWorkspace(new Project());
 
                 Filesystem.Assert(fs => fs.CreateDirectory(Path.Combine(projectPath, moduleName)), Occurs.Once());
+            }
+
+            [TestMethod, Owner("ebd"), TestCategory("Proven"), TestCategory("Unit")]
+            public void Invokes_CreateDirectory_With_Project_Working_DirectorY_Module_Name_And_Recordings_Subdirectory()
+            {
+                const string moduleName = "asdf";
+                const string projectPath = "fasdfasdf";
+
+                var module = new Module() { Name = moduleName };
+                DomainRoot.Arrange(dr => dr.GetRoot()).Returns(new Project(module.AsList()) { WorkingDirectory = projectPath });
+
+                Target.BuildWorkspace(new Project());
+
+                Filesystem.Assert(fs => fs.CreateDirectory(Path.Combine(projectPath, moduleName, "Recordings")), Occurs.Once());
             }
         }
     }
