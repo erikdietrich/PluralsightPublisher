@@ -25,7 +25,7 @@ namespace PluralsightPublisher
         public MainWindow()
         {
             var domainRoot = new DomainRoot();
-            var projectRepository = new ProjectRepository(new BasicXmlDocument(), new BasicFilesystem(), domainRoot);
+            var projectRepository = new ProjectRepository(new BasicXmlDocument(), new BasicWorkspaceBuilder(), domainRoot);
             var moduleRepository = new ModuleRepository(new BasicXmlDocument(), domainRoot);
             _viewModel = new MainWindowViewModel(projectRepository, moduleRepository);
             DataContext = _viewModel;

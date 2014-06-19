@@ -11,16 +11,16 @@ namespace PluralsightPublisher.Repository
 {
     public class ProjectRepository : IProjectRepository
     {
-        private readonly IFilesystem _filesystem;
+        private readonly IWorkspaceBuilder _workspaceBuilder;
         private readonly IXmlDocument _document;
         private readonly DomainRoot _domainRoot;
 
-        public ProjectRepository(IXmlDocument document, IFilesystem filesystem, DomainRoot domainRoot)
+        public ProjectRepository(IXmlDocument document, IWorkspaceBuilder workspaceBuilder, DomainRoot domainRoot)
         {
-            VerifyPreconditionsOrThrow(document, filesystem, domainRoot);
+            VerifyPreconditionsOrThrow(document, workspaceBuilder, domainRoot);
 
             _document = document;
-            _filesystem = filesystem;
+            _workspaceBuilder = workspaceBuilder;
             _domainRoot = domainRoot;
         }
 
@@ -52,18 +52,15 @@ namespace PluralsightPublisher.Repository
                 throw new ArgumentNullException("projectToBuildOut");
 
             var project = _domainRoot.GetRoot();
-
-            _filesystem.WipeAndCreateDirectory(project.WorkingDirectory);
-
-            CreateModuleDirectories(_domainRoot.GetRoot());
+            _workspaceBuilder.BuildWorkspaceForProject(project);
         }
 
-        private static void VerifyPreconditionsOrThrow(IXmlDocument document, IFilesystem filesystem, DomainRoot domainRoot)
+        private static void VerifyPreconditionsOrThrow(IXmlDocument document, IWorkspaceBuilder workspaceBuilder, DomainRoot domainRoot)
         {
             if (document == null)
                 throw new ArgumentNullException("document");
-            if (filesystem == null)
-                throw new ArgumentNullException("filesystem");
+            if (workspaceBuilder == null)
+                throw new ArgumentNullException("workspaceBuilder");
             if (domainRoot == null)
                 throw new ArgumentNullException("domainRoot");
         }
@@ -79,21 +76,6 @@ namespace PluralsightPublisher.Repository
                 ProjectPath = id
             };
             _domainRoot.SetRoot(project);
-        }
-
-        private void CreateModuleDirectories(IProject projectToBuildOut)
-        {
-            foreach (var moduleName in projectToBuildOut.GetModuleNames())
-            {
-                var moduleRootDirectoryPath = Path.Combine(projectToBuildOut.WorkingDirectory, moduleName);
-                _filesystem.CreateDirectory(moduleRootDirectoryPath);
-                _filesystem.CreateDirectory(Path.Combine(moduleRootDirectoryPath, "Recordings"));
-                var document = new Document();
-                var paragraph = document.AddSection().AddParagraph();
-                paragraph.AppendText("This is a Pluralsight module script");
-                //TODO: Abstract this out to data access or some kind of service
-                //document.SaveToFile(Path.Combine(moduleRootDirectoryPath, "Script.docx"));
-            }
         }
 
         private static string GetDescendantValueOrNull(XDocument document, XName nodeName)

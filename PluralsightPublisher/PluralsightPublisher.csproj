@@ -64,6 +64,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="DataAccess\BasicFilesystem.cs" />
+    <Compile Include="DataAccess\BasicWorkspaceBuilder.cs" />
     <Compile Include="DataAccess\BasicXmlDocument.cs" />
     <Compile Include="Domain\DomainRoot.cs" />
     <Compile Include="Types\IFilesystem.cs" />
@@ -77,6 +78,7 @@
     <Compile Include="Repository\ProjectRepository.cs" />
     <Compile Include="Types\IModuleRepository.cs" />
     <Compile Include="Types\IProjectRepository.cs" />
+    <Compile Include="Types\IWorkspaceBuilder.cs" />
     <Compile Include="Types\IXmlDocument.cs" />
     <Compile Include="Views\ProjectProperties.xaml.cs">
       <DependentUpon>ProjectProperties.xaml</DependentUpon>

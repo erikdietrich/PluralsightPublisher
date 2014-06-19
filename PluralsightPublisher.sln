@@ -5,7 +5,9 @@ VisualStudioVersion = 12.0.30110.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PluralsightPublisher", "PluralsightPublisher\PluralsightPublisher.csproj", "{05733B61-9D70-40FC-84A8-560E7E9101E3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PluralsightPublisherTest", "PluralsightPublisherTest\PluralsightPublisherTest.csproj", "{72E2DE78-71FA-4D48-AA39-D25CBDE85A69}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PluralsightPublisher.Test", "PluralsightPublisherTest\PluralsightPublisher.Test.csproj", "{72E2DE78-71FA-4D48-AA39-D25CBDE85A69}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PluralsightPublisher.IntegrationTest", "PluralsightPublisher.IntegrationTest\PluralsightPublisher.IntegrationTest.csproj", "{D84AB31E-F6F2-496B-A2DE-E39809750D21}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{72E2DE78-71FA-4D48-AA39-D25CBDE85A69}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{72E2DE78-71FA-4D48-AA39-D25CBDE85A69}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{72E2DE78-71FA-4D48-AA39-D25CBDE85A69}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D84AB31E-F6F2-496B-A2DE-E39809750D21}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D84AB31E-F6F2-496B-A2DE-E39809750D21}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D84AB31E-F6F2-496B-A2DE-E39809750D21}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D84AB31E-F6F2-496B-A2DE-E39809750D21}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

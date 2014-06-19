@@ -18,7 +18,7 @@ namespace PluralsightPublisherTest.Repository
         private readonly static string ValidDocument = "<?xml version=\"1.0\" encoding=\"utf-8\"?><Project><WorkingDirectory>C:\\Users\\edietrich\\Desktop</WorkingDirectory><PublicationDirectory>C:\\Users\\edietrich</PublicationDirectory><Title>My Project</Title><Module Name=\"Module 1\"/><Module Name=\"Module 2\"/></Project>";
 
         private IXmlDocument XmlDocument { get; set; }
-        private IFilesystem Filesystem { get; set; }
+        private IWorkspaceBuilder WorkspaceBuilder { get; set; }
         private DomainRoot DomainRoot { get; set; }
 
         private ProjectRepository Target { get; set; }
@@ -27,13 +27,13 @@ namespace PluralsightPublisherTest.Repository
         public void BeforeEachTest()
         {
             XmlDocument = Mock.Create<IXmlDocument>();
-            Filesystem = Mock.Create<IFilesystem>();
+            WorkspaceBuilder = Mock.Create<IWorkspaceBuilder>();
             DomainRoot = Mock.Create<DomainRoot>();
 
             DomainRoot.Arrange(dr => dr.GetRoot()).Returns((Project)null);
             DomainRoot.Arrange(dr => dr.SetRoot(Arg.IsAny<Project>())).DoInstead((Project p) => DomainRoot.Arrange(dr => dr.GetRoot()).Returns(p));
 
-            Target = new ProjectRepository(XmlDocument, Filesystem, DomainRoot);
+            Target = new ProjectRepository(XmlDocument, WorkspaceBuilder, DomainRoot);
         }
 
         [TestClass]
@@ -42,9 +42,9 @@ namespace PluralsightPublisherTest.Repository
             [TestMethod, Owner("ebd"), TestCategory("Proven"), TestCategory("Unit")]
             public void Throws_NullArgumentException_On_Null_Argument()
             {
-                ExtendedAssert.Throws<ArgumentNullException>(() => new ProjectRepository(null, Filesystem, DomainRoot));
+                ExtendedAssert.Throws<ArgumentNullException>(() => new ProjectRepository(null, WorkspaceBuilder, DomainRoot));
                 ExtendedAssert.Throws<ArgumentNullException>(() => new ProjectRepository(XmlDocument, null, DomainRoot));
-                ExtendedAssert.Throws<ArgumentNullException>(() => new ProjectRepository(XmlDocument, Filesystem, null));
+                ExtendedAssert.Throws<ArgumentNullException>(() => new ProjectRepository(XmlDocument, WorkspaceBuilder, null));
             }
         }
 
@@ -128,15 +128,16 @@ namespace PluralsightPublisherTest.Repository
         public class BuildWorkspace : ProjectRepositoryTest
         {
             [TestMethod, Owner("ebd"), TestCategory("Proven"), TestCategory("Unit")]
-            public void Invokes_Filesystem_WipeDirectoryAndMakeNew()
+            public void Invokes_WorkspaceBuilder_On_Project()
             {
-                const string path = "fas";
 
-                DomainRoot.Arrange(dr => dr.GetRoot()).Returns(new Project() { WorkingDirectory = path });
+                var project = new Project();
+
+                DomainRoot.Arrange(dr => dr.GetRoot()).Returns(project);
 
                 Target.BuildWorkspace(new Project());
 
-                Filesystem.Assert(fs => fs.WipeAndCreateDirectory(path), Occurs.Once());
+                WorkspaceBuilder.Assert(wsb => wsb.BuildWorkspaceForProject(project), Occurs.Once());
 
             }
 
@@ -146,44 +147,6 @@ namespace PluralsightPublisherTest.Repository
                 ExtendedAssert.Throws<ArgumentNullException>(() => Target.BuildWorkspace(null));
             }
 
-            [TestMethod, Owner("ebd"), TestCategory("Proven"), TestCategory("Unit")]
-            public void Invokes_CreateDirectory_Six_Times_For_Project_With_Three_Modules()
-            {
-                const int count = 3;
-                DomainRoot.Arrange(dr => dr.GetRoot()).Returns(new Project(new Module() { Name = "asdf" }.AsList(count)) { WorkingDirectory = "Fdsa" });
-
-                Target.BuildWorkspace(new Project());
-
-                Filesystem.Assert(fs => fs.CreateDirectory(Arg.AnyString), Occurs.Exactly(2 * count));
-            }
-
-            [TestMethod, Owner("ebd"), TestCategory("Proven"), TestCategory("Unit")]
-            public void Invokes_CreateDirectory_With_Project_WorkingDirectory_And_Module_Name_Combined()
-            {
-                const string moduleName = "asdf";
-                const string projectPath = "fasdfasdf";
-
-                var module = new Module() { Name = moduleName };
-                DomainRoot.Arrange(dr => dr.GetRoot()).Returns(new Project(module.AsList()) { WorkingDirectory = projectPath });
-
-                Target.BuildWorkspace(new Project());
-
-                Filesystem.Assert(fs => fs.CreateDirectory(Path.Combine(projectPath, moduleName)), Occurs.Once());
-            }
-
-            [TestMethod, Owner("ebd"), TestCategory("Proven"), TestCategory("Unit")]
-            public void Invokes_CreateDirectory_With_Project_Working_DirectorY_Module_Name_And_Recordings_Subdirectory()
-            {
-                const string moduleName = "asdf";
-                const string projectPath = "fasdfasdf";
-
-                var module = new Module() { Name = moduleName };
-                DomainRoot.Arrange(dr => dr.GetRoot()).Returns(new Project(module.AsList()) { WorkingDirectory = projectPath });
-
-                Target.BuildWorkspace(new Project());
-
-                Filesystem.Assert(fs => fs.CreateDirectory(Path.Combine(projectPath, moduleName, "Recordings")), Occurs.Once());
-            }
         }
     }
 }
