@@ -4,6 +4,8 @@ using PluralsightPublisher.Presentation;
 using PluralsightPublisher.Types;
 using System.Collections.Generic;
 using System.Linq;
+using Telerik.JustMock;
+using Telerik.JustMock.Helpers;
 
 namespace PluralsightPublisherTest.Presentation
 {
@@ -12,16 +14,18 @@ namespace PluralsightPublisherTest.Presentation
     {
         private ProjectViewModel Target { get; set; }
 
+        private IModuleRepository ModuleRepository { get; set; }
         private IProject Project { get; set; }
-
         private IEnumerable<IModule> Modules { get; set; }
 
         [TestInitialize]
         public void BeforeEachTest()
         {
+            ModuleRepository = Mock.Create<IModuleRepository>();
+
             Project = new Project() { PublicationDirectory = "asdf", WorkingDirectory = "fdsa", Title = "Some Project" };
             Modules = new List<Module>();
-            Target = new ProjectViewModel(Project, Modules);   
+            Target = new ProjectViewModel(Project, ModuleRepository, Modules);   
         }
 
         [TestClass]
@@ -81,7 +85,7 @@ namespace PluralsightPublisherTest.Presentation
             [TestMethod, Owner("ebd"), TestCategory("Proven"), TestCategory("Unit")]
             public void Returns_Null_When_Internal_Project_Is_Null()
             {
-                var viewModel = new ProjectViewModel(null);
+                var viewModel = new ProjectViewModel(null, ModuleRepository);
 
                 Assert.AreEqual<string>(string.Empty, viewModel.PublicationDirectory);
             }
@@ -120,7 +124,7 @@ namespace PluralsightPublisherTest.Presentation
             [TestMethod, Owner("ebd"), TestCategory("Proven"), TestCategory("Unit")]
             public void Returns_Null_When_Internal_Project_Is_Null()
             {
-                var viewModel = new ProjectViewModel(null);
+                var viewModel = new ProjectViewModel(null, ModuleRepository);
 
                 Assert.AreEqual<string>(string.Empty, viewModel.Title);
             }
@@ -145,7 +149,7 @@ namespace PluralsightPublisherTest.Presentation
             {
                 const string moduleName = "fdsa";
                 Modules = new List<Module>() { new Module() { Name = moduleName } };
-                Target = new ProjectViewModel(Project, Modules);
+                Target = new ProjectViewModel(Project, ModuleRepository, Modules);
 
                 Assert.AreEqual<string>(moduleName, Target.Modules.First().Name);
             }
@@ -153,9 +157,17 @@ namespace PluralsightPublisherTest.Presentation
             [TestMethod, Owner("ebd"), TestCategory("Proven"), TestCategory("Unit")]
             public void Returns_Empty_When_Nothing_Is_Passed_In()
             {
-                Target = new ProjectViewModel(Project);
+                Target = new ProjectViewModel(Project, ModuleRepository);
 
                 Assert.AreEqual<int>(0, Target.Modules.Count());
+            }
+
+            [TestMethod, Owner("ebd"), TestCategory("Proven"), TestCategory("Unit")]
+            public void Invokes_Add_When_Item_Is_Added_To_Collection()
+            {
+                Target.Modules.Add(Mock.Create<IModule>());
+
+                ModuleRepository.Assert(m => m.Add(Arg.IsAny<IModule>()), Occurs.Once());
             }
         }
 

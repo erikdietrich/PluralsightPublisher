@@ -39,11 +39,31 @@ namespace PluralsightPublisher.Repository
             if (itemToUpdate == null)
                 throw new ArgumentNullException("itemToUpdate");
 
+            var xmlRoot = BuildXmlStructureForProject(itemToUpdate);
+            _document.Save(xmlRoot, itemToUpdate.ProjectPath);
+        }
+
+        private static XElement BuildXmlStructureForProject(IProject itemToUpdate)
+        {
             var root = new XElement("Project");
             root.Add(new XElement("WorkingDirectory", itemToUpdate.WorkingDirectory ?? string.Empty));
             root.Add(new XElement("PublicationDirectory", itemToUpdate.PublicationDirectory ?? string.Empty));
             root.Add(new XElement("Title", itemToUpdate.Title ?? string.Empty));
-            _document.Save(root, itemToUpdate.ProjectPath);
+            
+            foreach (var moduleElement in BuildElementsForProject(itemToUpdate))
+                root.Add(moduleElement);
+
+            return root;
+        }
+
+        private static IEnumerable<XElement> BuildElementsForProject(IProject project)
+        {
+            foreach (var name in project.GetModuleNames())
+            {
+                var moduleNode = new XElement("Module");
+                moduleNode.SetAttributeValue("Name", name);
+                yield return moduleNode;
+            }
         }
 
         public void BuildWorkspace(IProject projectToBuildOut)

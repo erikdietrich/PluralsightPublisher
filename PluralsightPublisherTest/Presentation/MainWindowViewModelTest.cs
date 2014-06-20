@@ -201,6 +201,7 @@ namespace PluralsightPublisherTest.Presentation
 
                 Assert.IsTrue(wasCalled);
             }
+
         }
     }
 }

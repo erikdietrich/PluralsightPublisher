@@ -122,6 +122,17 @@ namespace PluralsightPublisherTest.Repository
 
                 XmlDocument.Assert(d => d.Save(Arg.Matches<XElement>(xe => xe.Descendants().Any(x => x.Value == theTitle)), Arg.AnyString), Occurs.Once());
             }
+
+            [TestMethod, Owner("ebd"), TestCategory("Proven"), TestCategory("Unit")]
+            public void Saves_With_A_Node_For_Each_Module()
+            {
+                var project = Mock.Create<IProject>();
+                project.Arrange(p => p.GetModuleNames()).Returns(new List<string>() { "Module 1", "Module 2" });
+
+                Target.Save(project);
+
+                XmlDocument.Assert(d => d.Save(Arg.Matches<XElement>(xe => xe.Descendants().Any(x => x.Name == "Module" && x.Attribute("Name").Value == "Module 1") && xe.Descendants().Any(x => x.Name == "Module" && x.Attribute("Name").Value == "Module 2")), Arg.AnyString), Occurs.Once());
+            }
         }
 
         [TestClass]

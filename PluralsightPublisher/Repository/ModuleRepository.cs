@@ -11,6 +11,10 @@ namespace PluralsightPublisher.Repository
         private readonly IXmlDocument _document;
         private readonly DomainRoot _domainRoot;
 
+        public void Add(object param1)
+        {
+            throw new NotImplementedException();
+        }
         public ModuleRepository(IXmlDocument document, DomainRoot domainRoot)
         {
             if (document == null)
@@ -38,6 +42,11 @@ namespace PluralsightPublisher.Repository
         public void Save(IModule module)
         {
             
+        }
+
+        public void Add(IModule module)
+        {
+
         }
     }
 }

@@ -3,12 +3,14 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Collections.Specialized;
 
 namespace PluralsightPublisher.Presentation
 {
     public class ProjectViewModel : ViewModel
     {
         private readonly IProject _project;
+        private readonly IModuleRepository _moduleRepository;
         
         public bool IsValid { get { return _project != null; } }
 
@@ -64,10 +66,17 @@ namespace PluralsightPublisher.Presentation
 
         public IProject Project { get { return _project; } }
 
-        public ProjectViewModel(IProject project, IEnumerable<IModule> modules = null)
+        public ProjectViewModel(IProject project, IModuleRepository moduleRepository, IEnumerable<IModule> modules = null)
         {
+            _moduleRepository = moduleRepository;
             Modules = new ObservableCollection<IModule>(modules ?? Enumerable.Empty<IModule>());
+            Modules.CollectionChanged += Modules_CollectionChanged;
             _project = project;
+        }
+
+        private void Modules_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            _moduleRepository.Add(Modules.Last());
         }
 
     }

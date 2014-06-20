@@ -55,7 +55,7 @@ namespace PluralsightPublisher.Presentation
             _moduleRepository = moduleRepository;
             _projectRepository = projectRepository;
 
-            ProjectViewModel = new ProjectViewModel(null);
+            ProjectViewModel = new ProjectViewModel(null, _moduleRepository);
 
             _saveCommand = new ArbitraryCommand(SaveProject, (o) => ProjectViewModel.IsValid);
             _createWorkingCommand = new ArbitraryCommand(() => _projectRepository.BuildWorkspace(ProjectViewModel.Project), (o) => ProjectViewModel.IsValid);
@@ -69,7 +69,7 @@ namespace PluralsightPublisher.Presentation
             var projectToCreate = new Project() { ProjectPath = projectPath };
 
             _projectRepository.Save(projectToCreate);
-            ProjectViewModel = new ProjectViewModel(projectToCreate);
+            ProjectViewModel = new ProjectViewModel(projectToCreate, _moduleRepository);
         }
 
         public void LoadProject(string projectPath)
@@ -80,7 +80,7 @@ namespace PluralsightPublisher.Presentation
             var project = _projectRepository.GetById(projectPath);
             var modules = _moduleRepository.GetAllForProject(projectPath);
 
-            ProjectViewModel = new ProjectViewModel(project, modules);
+            ProjectViewModel = new ProjectViewModel(project, _moduleRepository, modules);
         }
 
         public void SaveProject()
