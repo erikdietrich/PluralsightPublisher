@@ -4,8 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PluralsightPublisher.DataAccess
 {
@@ -37,6 +35,8 @@ namespace PluralsightPublisher.DataAccess
             var paragraph = document.AddSection().AddParagraph();
             paragraph.AppendText("This is a Pluralsight module script");
             document.SaveToFile(Path.Combine(moduleDirectory, "Script.docx"));
+
+            File.Copy(Path.Combine("Deliverables", "PluralsightSlideTemplate.pptx"), Path.Combine(moduleDirectory, "Slides.pptx"));
         }
     }
 }

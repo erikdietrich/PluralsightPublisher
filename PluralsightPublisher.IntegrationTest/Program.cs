@@ -16,6 +16,7 @@ namespace PluralsightPublisher.IntegrationTest
             WorkspaceBuilderTest.BuildWorkspaceForProject.Creates_Module_Subdirectories();
             WorkspaceBuilderTest.BuildWorkspaceForProject.Creates_Recordings_Directory_Inside_Module_Directory();
             WorkspaceBuilderTest.BuildWorkspaceForProject.Creates_Script_Document_In_Module_Directory();
+            WorkspaceBuilderTest.BuildWorkspaceForProject.Creates_PowerPoint_Document_In_Module_Directory();
 
             WorkspaceBuilderTest.BuildWorkspaceForProject.Cleanup();
         }

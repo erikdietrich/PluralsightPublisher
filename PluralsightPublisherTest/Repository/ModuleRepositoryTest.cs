@@ -88,5 +88,21 @@ namespace PluralsightPublisherTest.Repository
                 
             }
         }
+
+        [TestClass]
+        public class SetModules : ModuleRepositoryTest
+        {
+            [TestMethod, Owner("ebd"), TestCategory("Proven"), TestCategory("Unit")]
+            public void Adds_Modules_Passed_In_To_DomainRoot()
+            {
+                var project = new Project();
+                DomainRoot.Arrange(dr => dr.GetRoot()).Returns(project);
+
+                Target.SetModules(Mock.Create<IModule>(), Mock.Create<IModule>());
+
+                Assert.AreEqual<int>(2, project.GetModuleNames().Count());
+            }
+
+        }
     }
 }

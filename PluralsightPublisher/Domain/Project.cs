@@ -28,6 +28,11 @@ namespace PluralsightPublisher.Domain
             _modules.Add(moduleToAdd);
         }
 
+        public void ClearModules()
+        {
+            _modules.Clear();
+        }
+
         public IEnumerable<string> GetModuleNames()
         {
             return _modules.Select(m => m.Name);

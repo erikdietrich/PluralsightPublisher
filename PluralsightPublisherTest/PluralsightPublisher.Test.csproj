@@ -61,9 +61,11 @@
   </Choose>
   <ItemGroup>
     <Compile Include="Domain\DomainRootTest.cs" />
+    <Compile Include="Domain\ProjectTest.cs" />
     <Compile Include="ExtendedAssert.cs" />
     <Compile Include="Presentation\ArbitraryCommandTest.cs" />
     <Compile Include="Presentation\MainWindowViewModelTest.cs" />
+    <Compile Include="Presentation\ModuleModelTest.cs" />
     <Compile Include="Presentation\ProjectViewModelTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repository\ModuleRepositoryTest.cs" />

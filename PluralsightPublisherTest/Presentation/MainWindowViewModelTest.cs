@@ -202,6 +202,26 @@ namespace PluralsightPublisherTest.Presentation
                 Assert.IsTrue(wasCalled);
             }
 
+            [TestMethod, Owner("ebd"), TestCategory("Proven"), TestCategory("Unit")]
+            public void Saves_Modules()
+            {
+                Target.LoadProject("asdf");
+                Target.SaveProject();
+
+                ModuleRepository.Assert(mr => mr.SetModules(Arg.IsAny<IModule[]>()), Occurs.Once());
+            }
+
+            [TestMethod, Owner("ebd"), TestCategory("Proven"), TestCategory("Unit")]
+            public void Sets_Status_To_Cannot_Save_With_Empty_Module_Name_When_A_Module_Has_Empty_Name()
+            {
+                Target.LoadProject("fasdfasdf");
+                Target.ProjectViewModel.Modules.Add(new ModuleModel());
+                
+                Target.SaveProject();
+
+                Assert.AreEqual<string>("Cannot save with empty module name.", Target.StatusMessage);
+                
+            }
         }
     }
 }

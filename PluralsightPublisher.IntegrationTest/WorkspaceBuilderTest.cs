@@ -96,6 +96,19 @@ namespace PluralsightPublisher.IntegrationTest
                     throw new IntegrationTestFailedException();
             }
 
+            public static void Creates_PowerPoint_Document_In_Module_Directory()
+            {
+                var project = BuildProject();
+
+                const string moduleName = "Module 1";
+                project.Arrange(pr => pr.GetModuleNames()).Returns(new List<String>() { moduleName });
+
+                PerformBuild(project);
+
+                if (!File.Exists(Path.Combine(project.WorkingDirectory, moduleName, "Slides.pptx")))
+                    throw new IntegrationTestFailedException();
+            }
+
             public static void Cleanup()
             {
                 Directory.Delete(WorkingPath, true);

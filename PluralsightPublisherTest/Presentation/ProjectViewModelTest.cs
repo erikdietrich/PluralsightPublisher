@@ -145,6 +145,17 @@ namespace PluralsightPublisherTest.Presentation
         public class ModulesProperty : ProjectViewModelTest
         {
             [TestMethod, Owner("ebd"), TestCategory("Proven"), TestCategory("Unit")]
+            public void Returns_Instance_Of_ModuleModel()
+            {
+                var module = Mock.Create<IModule>();
+                var modules = new List<IModule>() { module };
+
+                Target = new ProjectViewModel(Project, ModuleRepository, modules);
+
+                Assert.IsInstanceOfType(Target.Modules.First(), typeof(ModuleModel));
+            }
+
+            [TestMethod, Owner("ebd"), TestCategory("Proven"), TestCategory("Unit")]
             public void Returns_Passed_In_Module()
             {
                 const string moduleName = "fdsa";
@@ -162,13 +173,6 @@ namespace PluralsightPublisherTest.Presentation
                 Assert.AreEqual<int>(0, Target.Modules.Count());
             }
 
-            [TestMethod, Owner("ebd"), TestCategory("Proven"), TestCategory("Unit")]
-            public void Invokes_Add_When_Item_Is_Added_To_Collection()
-            {
-                Target.Modules.Add(Mock.Create<IModule>());
-
-                ModuleRepository.Assert(m => m.Add(Arg.IsAny<IModule>()), Occurs.Once());
-            }
         }
 
         [TestClass]
@@ -180,5 +184,6 @@ namespace PluralsightPublisherTest.Presentation
                 Assert.AreEqual<string>(Project.WorkingDirectory, Target.WorkingDirectory);
             }
         }
+
     }
 }

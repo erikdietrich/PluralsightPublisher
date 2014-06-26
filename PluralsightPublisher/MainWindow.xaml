@@ -40,7 +40,10 @@
         <TextBlock Grid.Row="1" HorizontalAlignment="Center" FontSize="22" Text="{Binding ProjectViewModel.Title, UpdateSourceTrigger=PropertyChanged}"/>
         <views:ProjectProperties Margin="5,5" Grid.Row="2" DataContext="{Binding ProjectViewModel}" />
         
-        <DataGrid Grid.Row="3" ItemsSource="{Binding ProjectViewModel.Modules}">
+        <DataGrid Grid.Row="3" ItemsSource="{Binding ProjectViewModel.Modules, UpdateSourceTrigger=LostFocus}" CanUserAddRows="True" KeyUp="DataGrid_KeyUp" >
+            <DataGrid.CommandBindings>
+                
+            </DataGrid.CommandBindings>
         </DataGrid>
 
         <Button Grid.Row="4" HorizontalAlignment="Left" Margin ="10,0" MaxWidth="200" Content="Create Working Directory" 

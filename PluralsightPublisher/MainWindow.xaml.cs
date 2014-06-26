@@ -9,6 +9,9 @@ using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Xml;
+using System.Windows.Controls;
+using System.Windows.Input;
+using System.ComponentModel;
 
 namespace PluralsightPublisher
 {
@@ -53,6 +56,19 @@ namespace PluralsightPublisher
             dialog.Filter = FileFilter;
             
             return (dialog.ShowDialog() ?? false) ? dialog.FileName : string.Empty;
+        }
+
+        
+
+        private void DataGrid_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.S && (Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)
+            {
+                var grid = sender as DataGrid;
+                grid.CommitEdit(DataGridEditingUnit.Row, true);
+                grid.Items.Refresh();
+                _viewModel.SaveProject();
+            }
         }
     }
 }

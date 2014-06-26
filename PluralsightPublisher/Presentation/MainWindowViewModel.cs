@@ -88,9 +88,23 @@ namespace PluralsightPublisher.Presentation
             if(!ProjectViewModel.IsValid)
                 throw new InvalidOperationException("Cannot save without loading a project.");
 
-            _projectRepository.Save(ProjectViewModel.Project);
-            StatusMessage = "Project saved.";
+            TryToSave();
         }
 
+        private void TryToSave()
+        {
+            var areAllModulesValid = !_projectViewModel.Modules.Any(m => string.IsNullOrEmpty(m.Name));
+
+            if (areAllModulesValid)
+                PerformSave();
+
+            StatusMessage = areAllModulesValid ? "Project saved." : "Cannot save with empty module name.";
+        }
+
+        private void PerformSave()
+        {
+            _moduleRepository.SetModules(_projectViewModel.Modules.ToArray());
+            _projectRepository.Save(ProjectViewModel.Project);
+        }
     }
 }

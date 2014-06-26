@@ -59,7 +59,7 @@ namespace PluralsightPublisher.Presentation
             }
         }
 
-        public ObservableCollection<IModule> Modules
+        public ObservableCollection<ModuleModel> Modules
         {
             get; private set;
         }
@@ -69,14 +69,9 @@ namespace PluralsightPublisher.Presentation
         public ProjectViewModel(IProject project, IModuleRepository moduleRepository, IEnumerable<IModule> modules = null)
         {
             _moduleRepository = moduleRepository;
-            Modules = new ObservableCollection<IModule>(modules ?? Enumerable.Empty<IModule>());
-            Modules.CollectionChanged += Modules_CollectionChanged;
             _project = project;
-        }
 
-        private void Modules_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            _moduleRepository.Add(Modules.Last());
+            Modules = new ObservableCollection<ModuleModel>(modules != null ? modules.Select(m => new ModuleModel(m)) : Enumerable.Empty<ModuleModel>());            
         }
 
     }
