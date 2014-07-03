@@ -14,8 +14,8 @@ namespace PluralsightPublisher.DataAccess
         {
             CreateProjectDirectory(project);
 
-            foreach (var moduleName in project.GetModuleNames())
-                BuildModuleDirectoryStructure(Path.Combine(project.WorkingDirectory, moduleName));
+            foreach (var pair in project.GetModuleNames().Select((moduleName, index) => new { moduleName, index }))
+                BuildModuleDirectoryStructure(Path.Combine(project.WorkingDirectory, StripIllegalCharacters(pair.moduleName)));
         }
 
         private static void CreateProjectDirectory(IProject project)
@@ -37,6 +37,11 @@ namespace PluralsightPublisher.DataAccess
             document.SaveToFile(Path.Combine(moduleDirectory, "Script.docx"));
 
             File.Copy(Path.Combine("Deliverables", "PluralsightSlideTemplate.pptx"), Path.Combine(moduleDirectory, "Slides.pptx"));
+        }
+
+        private static string StripIllegalCharacters(string filename)
+        {
+            return string.Join(string.Empty, filename.Split(Path.GetInvalidFileNameChars()));
         }
     }
 }

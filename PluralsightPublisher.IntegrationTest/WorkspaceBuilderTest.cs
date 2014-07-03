@@ -109,6 +109,19 @@ namespace PluralsightPublisher.IntegrationTest
                     throw new IntegrationTestFailedException();
             }
 
+            public static void Strips_Quotes_From_Path()
+            {
+                var project = BuildProject();
+
+                const string moduleName = "Module \"1\"";
+                project.Arrange(pr => pr.GetModuleNames()).Returns(new List<String>() { moduleName });
+
+                PerformBuild(project);
+
+                if (!Directory.Exists(Path.Combine(project.WorkingDirectory, "Module 1")))
+                    throw new IntegrationTestFailedException();
+            }
+
             public static void Cleanup()
             {
                 Directory.Delete(WorkingPath, true);
