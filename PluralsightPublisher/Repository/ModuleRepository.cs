@@ -39,6 +39,12 @@ namespace PluralsightPublisher.Repository
         public void SetModules(params IModule[] modules)
         {
             var root = _domainRoot.GetRoot();
+            if (root == null)
+            {
+                root = new Project();
+                _domainRoot.SetRoot(root);
+            }
+
             root.ClearModules();
 
             foreach(var module in modules)

@@ -103,6 +103,16 @@ namespace PluralsightPublisherTest.Repository
                 Assert.AreEqual<int>(2, project.GetModuleNames().Count());
             }
 
+            [TestMethod, Owner("ebd"), TestCategory("Proven"), TestCategory("Unit")]
+            public void Creates_New_Root_If_None_Exists()
+            {
+                DomainRoot.Arrange(dr => dr.GetRoot()).Returns<IProject>(null);
+
+                Target.SetModules(Mock.Create<IModule>());
+
+                DomainRoot.Assert(dr => dr.SetRoot(Arg.IsAny<Project>()), Occurs.Once());
+            }
+
         }
     }
 }

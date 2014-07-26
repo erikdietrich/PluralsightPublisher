@@ -1,20 +1,14 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace PluralsightPublisherTest
+namespace $rootnamespace$
 {
     public static class ExtendedAssert
     {
         /// <summary>Check that a statement throws a specific type of exception</summary>
         /// <typeparam name="TException">Exception type inheriting from Exception</typeparam>
-        /// <param name="executableMethod">Block that should throw the exception</param>
-        /// <returns>True or false depending on results</returns>
-        public static void Throws<TException>(Action executable)
-            where TException : Exception
+        /// <param name="executable">Action that should throw the exception</param>
+        public static void Throws<TException>(Action executable) where TException : Exception
         {
             try
             {
@@ -29,12 +23,9 @@ namespace PluralsightPublisherTest
         }
 
         /// <summary>Check that a statement throws some kind of exception</summary>
-        /// <param name="executable">Block that should throw the exception</param>
-        public static void Throws(Action executable)
-        {
-            Throws(executable, "Expected an exception but none was thrown.");
-        }
-        public static void Throws(Action executable, string message)
+        /// <param name="executable">Action that should throw the exception</param>
+        /// <param name="message">Optionally specify a message</param>
+        public static void Throws(Action executable, string message = null)
         {
             try
             {
@@ -45,7 +36,7 @@ namespace PluralsightPublisherTest
                 Assert.IsTrue(true);
                 return;
             }
-            Assert.Fail(message);
+            Assert.Fail(message ?? "Expected an exception but none was thrown.");
         }
 
         /// <summary>Check that a statement does not throw an exception</summary>
@@ -62,20 +53,5 @@ namespace PluralsightPublisherTest
             }
         }
 
-        /// <summary>Check that a collection is empty</summary>
-        /// <typeparam name="T">Collection type</typeparam>
-        /// <param name="collection">The collection</param>
-        public static void IsEmpty<T>(ICollection<T> collection)
-        {
-            Assert.IsTrue(collection.Count == 0, "Empty collection expected, but actual count is " + collection.Count.ToString());
-        }
-
-        /// <summary>Check that a list/collection is not empty</summary>
-        /// <typeparam name="T">Collection type</typeparam>
-        /// <param name="collection">Collection in question</param>
-        public static void IsNotEmpty<T>(ICollection<T> collection)
-        {
-            Assert.IsFalse(collection.Count == 0, "Non-empty collection expected, but collection is empty.");
-        }
     }
 }
