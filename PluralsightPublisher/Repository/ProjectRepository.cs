@@ -39,8 +39,15 @@ namespace PluralsightPublisher.Repository
             if (itemToUpdate == null)
                 throw new ArgumentNullException("itemToUpdate");
 
-            var xmlRoot = BuildXmlStructureForProject(itemToUpdate);
-            _document.Save(xmlRoot, itemToUpdate.ProjectPath);
+            if(_domainRoot.GetRoot() == null)
+                _domainRoot.SetRoot(new Project(itemToUpdate));
+            else
+                _domainRoot.GetRoot().CopyProjectPropertiesFrom(itemToUpdate);
+
+            var root = _domainRoot.GetRoot();
+
+            var xmlRoot = BuildXmlStructureForProject(root);
+            _document.Save(xmlRoot, root.ProjectPath);
         }
 
         private static XElement BuildXmlStructureForProject(IProject itemToUpdate)

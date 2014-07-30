@@ -23,6 +23,20 @@ namespace PluralsightPublisher.Domain
             _modules = modules;
         }
 
+        public Project(IProject project)
+        {
+            CopyProjectPropertiesFrom(project);
+            _modules = project.GetModuleNames().Select(m => new Module() { Name = m }).ToList();
+        }
+
+        public void CopyProjectPropertiesFrom(IProject projectToCopy)
+        {
+            ProjectPath = projectToCopy.ProjectPath;
+            WorkingDirectory = projectToCopy.WorkingDirectory;
+            PublicationDirectory = projectToCopy.PublicationDirectory;
+            Title = projectToCopy.Title;
+        }
+
         public void AddModule(Module moduleToAdd)
         {
             _modules.Add(moduleToAdd);
@@ -37,6 +51,5 @@ namespace PluralsightPublisher.Domain
         {
             return _modules.Select(m => m.Name);
         }
-
     }
 }

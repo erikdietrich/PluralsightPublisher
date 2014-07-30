@@ -133,6 +133,46 @@ namespace PluralsightPublisherTest.Repository
 
                 XmlDocument.Assert(d => d.Save(Arg.Matches<XElement>(xe => xe.Descendants().Any(x => x.Name == "Module" && x.Attribute("Name").Value == "Module 1") && xe.Descendants().Any(x => x.Name == "Module" && x.Attribute("Name").Value == "Module 2")), Arg.AnyString), Occurs.Once());
             }
+
+            [TestMethod, Owner("ebd"), TestCategory("Proven"), TestCategory("Unit")]
+            public void Sets_Domain_Root_To_Passed_In_Project_When_Root_Is_Null()
+            {
+                const string projectPath = "asdf";
+                var project = new Project() { ProjectPath = projectPath };
+                    
+                DomainRoot.Arrange(dr => dr.GetRoot()).Returns((Project)null);
+
+                Target.Save(project);
+
+                DomainRoot.Assert(dr => dr.SetRoot(Arg.Matches<Project>(p => p.ProjectPath == projectPath)));
+            }
+
+            [TestMethod, Owner("ebd"), TestCategory("Proven"), TestCategory("Unit")]
+            public void Does_Not_Overwrite_Existing_Project_When_Root_Is_Not_Null()
+            {
+                const string projectPath = "asdf";
+                var project = new Project() { ProjectPath = projectPath };
+
+                DomainRoot.Arrange(dr => dr.GetRoot()).Returns(new Project());
+
+                Target.Save(project);
+
+                DomainRoot.Assert(dr => dr.SetRoot(Arg.Matches<Project>(p => p.ProjectPath == projectPath)), Occurs.Never());
+            }
+
+            [TestMethod, Owner("ebd"), TestCategory("Proven"), TestCategory("Unit")]
+            public void Overwites_Existing_Project_Title()
+            {
+                const string title = "asdfasfda";
+                var project = new Project() { Title = title };
+
+                DomainRoot.Arrange(dr => dr.GetRoot()).Returns(new Project());
+
+                Target.Save(project);
+
+                XmlDocument.Assert(d => d.Save(Arg.Matches<XElement>(xe => xe.Descendants().Any(x => x.Name == "Title" && x.Value == title)), Arg.AnyString), Occurs.Once());
+            }
+
         }
 
         [TestClass]

@@ -1,7 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 
-namespace $rootnamespace$
+namespace PluralsightPublisherTest
 {
     public static class ExtendedAssert
     {
